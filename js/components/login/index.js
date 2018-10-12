@@ -1,28 +1,13 @@
 import React, { Component } from 'react';
-import {
-    ScrollView,
-    Text,
-    TextInput,
-    View,
-    Button
-} from 'react-native';
 
-export default class Login extends Component {
+import Main from './Main';
+import {View} from "react-native";
 
-    onLogin (email, password) {
-        console.log(email, password) // user credentials
-    }
-       
-    onResetPassword (email) {
-        console.log(email)
-      }
+export default class LoginComponent extends Component {
 
     render() {
-        return    
-            //   <Login
-            //     onLogin={onLogin}
-            //     onResetPassword={onResetPassword}
-            //   />
-            
+        return (
+                <Main />
+        );
     }
 }
