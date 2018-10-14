@@ -63,10 +63,9 @@ export default class LoginScreen extends Component {
      */
     static loginSuccess(res) {
 //login
-
         alert(res.accessToken);
         AsyncStorage.setItem("userToken",res.accessToken);
-        Actions.signinScreen()
+        Actions.signinScreen() // TODO change it to home page
     }
 
 
