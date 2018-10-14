@@ -4,6 +4,7 @@ import Dimensions from 'Dimensions';
 import {StyleSheet, View, TextInput, Image} from 'react-native';
 
 export default class UserInput extends Component {
+
   render() {
     return (
       <View style={styles.inputWrapper}>
@@ -39,7 +40,7 @@ const DEVICE_HEIGHT = Dimensions.get('window').height;
 
 const styles = StyleSheet.create({
   input: {
-    backgroundColor: 'rgba(32, 151, 18, 0.4)',
+    backgroundColor: 'rgba(32, 151, 18, 0.6)',
     width: DEVICE_WIDTH - 40,
     height: 40,
     marginHorizontal: 20,

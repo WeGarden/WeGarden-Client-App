@@ -4,14 +4,15 @@ import {StyleSheet, View, Text, Image, KeyboardAvoidingView} from 'react-native'
 
 import logoImg from '../../../assets/images/logo.png';
 
+const APP_TITLE = "WeGarden";
 export default class Logo extends Component {
   render() {
-    return (
+      return (
       <View style={styles.container}>
         <KeyboardAvoidingView behavior={'height'}>
         <Image source={logoImg} style={styles.image} />
         </KeyboardAvoidingView>
-        <Text style={styles.text}>We Garden</Text>
+        <Text style={styles.text}>{APP_TITLE}</Text>
       </View>
     );
   }
@@ -24,8 +25,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   image: {
-    width: 200,
-    height: 200,
+    width: 80,
+    height: 80,
   },
   text: {
     fontSize:50,
