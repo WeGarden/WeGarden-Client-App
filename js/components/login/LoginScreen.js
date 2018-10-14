@@ -3,10 +3,14 @@ import PropTypes from 'prop-types';
 import Logo from './Logo';
 import Form from './Form';
 import Wallpaper from './Wallpaper';
+import { AsyncStorage } from "react-native";
 import ButtonSubmit from './ButtonSubmit';
 import SignupSection from './SignupSection';
 import Api from '../utils/ApiCalls';
-import {KeyboardAvoidingView} from "react-native";
+import {KeyboardAvoidingView, TouchableOpacity} from "react-native";
+import {Keyboard} from 'react-native';
+import {Actions} from "react-native-router-flux/index";
+
 
 export default class LoginScreen extends Component {
 
@@ -14,7 +18,7 @@ export default class LoginScreen extends Component {
         super();
         this.state = {
             username: '',
-            password: ''
+            password: '',
         };
 
         this.handlePassword = this.handlePassword.bind(this);
@@ -30,15 +34,16 @@ export default class LoginScreen extends Component {
         this.setState({password: text})
     }
 
-    doneLogin(func) {
-        func();
-    }
 
-    login(user, pass) {
-        if (this.checkInput(user, pass)) {
-            Api.authentificateUser(user, pass, this.loginSuccess, this.loginFailed, this.connexionFailed);
+    login(doneLoading) {
+        const user = this.state.username;
+        const pass = this.state.password;
+
+        if (LoginScreen.checkInput(user, pass)) {
+            Api.authentificateUser(user, pass, LoginScreen.loginSuccess, LoginScreen.loginFailed, LoginScreen.connexionFailed).then(()=>doneLoading());
         } else {
-            alert({title: "Error", message: "Please enter your login Username and Password"});
+            alert("Please enter your login Username and Password");
+            doneLoading();
         }
     }
 
@@ -48,17 +53,20 @@ export default class LoginScreen extends Component {
      * @param pass the entered password
      * @returns true if inputs are correct, false otherwise
      */
-    checkInput(user, pass) {
+    static checkInput(user, pass) {
         return user && pass;
     }
 
     /**
-     * login success callback function
+     * login api success callback function
      * @param res json of the api response {'accessToken':?}
      */
-    loginSuccess(res) {
+    static loginSuccess(res) {
 //login
-        alert("Welcome back!");
+
+        alert(res.accessToken);
+        AsyncStorage.setItem("userToken",res.accessToken);
+        Actions.signinScreen()
     }
 
 
@@ -66,33 +74,34 @@ export default class LoginScreen extends Component {
      * connexion failed callback function
      * @param error json of the api error
      */
-    connexionFailed(error) {
-        alert("Connexion failed" + JSON.stringify(error))
+    static connexionFailed(error) {
+        alert("Connexion failed" + JSON.stringify(error));
     }
 
     /**
      * login failed callback function
      */
-    loginFailed() {
+    static loginFailed() {
         alert("Wrong Username/Password");
     }
 
     render() {
+
         return (
-            <Wallpaper>
-                <KeyboardAvoidingView behavior='padding' style={{flex: 1}}>
-                    <Logo/>
-                    {<Form handleUsername={this.handleUsername} handlePassword={this.handlePassword}/>}
-                    <ButtonSubmit handleLogin={() => {
-                        this.login(this.state.username, this.state.password)
-                    }}/>
+            <TouchableOpacity activeOpacity={1} onPress={Keyboard.dismiss}>
+                <Wallpaper>
+                    <KeyboardAvoidingView behavior='padding' style={{flex: 1}}>
+                        <Logo/>
 
-                    <SignupSection
-                        //signIngUrl={/*TODO*/} forgotPassordUrl={/*TODO*/}
-                    />
-                </KeyboardAvoidingView>
+                        <Form handleUsername={this.handleUsername} handlePassword={this.handlePassword}/>
+                        <ButtonSubmit handleLogin={this.login}/>
 
-            </Wallpaper>
+                        <SignupSection
+                            //signIngUrl={/*TODO*/} forgotPassordUrl={/*TODO*/}
+                        />
+                    </KeyboardAvoidingView>
+                </Wallpaper>
+            </TouchableOpacity>
         );
     }
 }
