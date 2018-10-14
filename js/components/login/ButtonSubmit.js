@@ -33,17 +33,21 @@ export default class ButtonSubmit extends Component {
         this.buttonAnimated = new Animated.Value(0);
         this.growAnimated = new Animated.Value(0);
         this._onPress = this._onPress.bind(this);
+        this.doneLoading = this.doneLoading.bind(this);
+    }
+
+    doneLoading(){
+        this.setState({isLoading:false});
+        Animated.timing(this.buttonAnimated, {
+            toValue: 0,
+            duration: 200,
+            easing: Easing.linear,
+        }).start();
     }
 
     _onPress() {
         if (this.state.isLoading) {
-            this.setState({isLoading:false});
-            Animated.timing(this.buttonAnimated, {
-                toValue: 0,
-                duration: 200,
-                easing: Easing.linear,
-            }).start();
-            return;
+            this.doneLoading();
         }
 
         this.setState({isLoading: true});
@@ -52,13 +56,15 @@ export default class ButtonSubmit extends Component {
             duration: 200,
             easing: Easing.linear,
         }).start();
-        this.props.handleLogin();
+        this.props.handleLogin(this.doneLoading);
 
     }
 
 
 
+
     render() {
+
         const changeWidth = this.buttonAnimated.interpolate({
             inputRange: [0, 1],
             outputRange: [DEVICE_WIDTH - MARGIN, MARGIN],
