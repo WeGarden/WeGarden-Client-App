@@ -4,7 +4,7 @@ export default class ApiCalls {
 
 
     static authentificateUser (username, password, callback200, callback401,callbackOtherError) {
-        fetch(API_URL + "/api/auth/signin", {
+        return fetch(API_URL + "/api/auth/signin", {
             method: 'post',
             headers: {
                 Accept: 'application/json',
