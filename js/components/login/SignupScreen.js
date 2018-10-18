@@ -24,6 +24,7 @@ export default class SignupScreen extends Component {
         this.handlePassword = this.handlePassword.bind(this);
         this.handleConfirmPassword = this.handleConfirmPassword.bind(this);
         this.handleUsername = this.handleUsername.bind(this);
+        this.handleEmail = this.handleEmail.bind(this);
         this.signupAction = this.signupAction.bind(this);
     }
 
