@@ -26,15 +26,30 @@ export default class LoginScreen extends Component {
         this.login = this.login.bind(this);
     }
 
+    /**
+     * username setter
+     * 
+     * @param {String} text entered username
+     */
     handleUsername(text) {
         this.setState({username: text})
     }
 
+    /**
+     * password setter
+     * 
+     * @param {String} text entered password
+     */
     handlePassword(text) {
         this.setState({password: text})
     }
 
 
+    /**
+     * on submit button pressed f
+     * 
+     * @param {function} doneLoading 
+     */
     login(doneLoading) {
         const user = this.state.username;
         const pass = this.state.password;
@@ -49,8 +64,8 @@ export default class LoginScreen extends Component {
 
     /**
      * true if inputs are correct, false otherwise
-     * @param user the entered username
-     * @param pass the entered password
+     * @param user the username
+     * @param pass the password
      * @returns true if inputs are correct, false otherwise
      */
     static checkInput(user, pass) {
@@ -62,7 +77,7 @@ export default class LoginScreen extends Component {
      * @param res json of the api response {'accessToken':?}
      */
     static loginSuccess(res) {
-//login
+        //login
         alert(res.accessToken);
         AsyncStorage.setItem("userToken",res.accessToken);
         Actions.signinScreen() // TODO change it to home page
