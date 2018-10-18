@@ -6,7 +6,7 @@ import Wallpaper from './Wallpaper';
 import { AsyncStorage } from "react-native";
 import ButtonSubmit from './ButtonSubmit';
 import SignupSection from './SignupSection';
-import Api from '../utils/ApiCalls';
+import Api from '../../utils/ApiCalls';
 import {KeyboardAvoidingView, TouchableOpacity} from "react-native";
 import {Keyboard} from 'react-native';
 import {Actions} from "react-native-router-flux/index";
@@ -46,7 +46,7 @@ export default class LoginScreen extends Component {
 
 
     /**
-     * on submit button pressed f
+     * on submit button pressed 
      * 
      * @param {function} doneLoading 
      */
@@ -108,7 +108,7 @@ export default class LoginScreen extends Component {
                         <Logo/>
 
                         <Form handleUsername={this.handleUsername} handlePassword={this.handlePassword}/>
-                        <ButtonSubmit handleLogin={this.login}/>
+                        <ButtonSubmit handleSubmit={this.login}/>
 
                         <SignupSection
                             //signIngUrl={/*TODO*/} forgotPassordUrl={/*TODO*/}

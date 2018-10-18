@@ -56,7 +56,7 @@ export default class ButtonSubmit extends Component {
             duration: 200,
             easing: Easing.linear,
         }).start();
-        this.props.handleLogin(this.doneLoading);
+        this.props.handleSubmit(this.doneLoading);
 
     }
 
