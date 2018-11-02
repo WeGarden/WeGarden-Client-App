@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import Logo from './Logo';
-import Form from './Form';
+import Form from './LoginForm';
 import Wallpaper from './Wallpaper';
 import { AsyncStorage } from "react-native";
 import ButtonSubmit from './ButtonSubmit';
@@ -10,20 +10,27 @@ import Api from '../../utils/ApiCalls';
 import {KeyboardAvoidingView, TouchableOpacity} from "react-native";
 import {Keyboard} from 'react-native';
 import {Actions} from "react-native-router-flux/index";
+import {AbortController} from "abort-controller";
+
+
 
 
 export default class LoginScreen extends Component {
 
     constructor() {
+        let controller = new AbortController();
         super();
         this.state = {
             username: '',
             password: '',
+            signalController: new AbortController(),
+            abortSignal: controller.signal,
         };
 
         this.handlePassword = this.handlePassword.bind(this);
         this.handleUsername = this.handleUsername.bind(this);
         this.login = this.login.bind(this);
+        this.handleStopSubmit = this.handleStopSubmit.bind(this);
     }
 
     /**
@@ -44,6 +51,12 @@ export default class LoginScreen extends Component {
         this.setState({password: text})
     }
 
+    /**
+     * abort connexion
+     */
+    handleStopSubmit(){
+        this.state.signalController.abort()
+    }
 
     /**
      * on submit button pressed 
@@ -55,7 +68,7 @@ export default class LoginScreen extends Component {
         const pass = this.state.password;
 
         if (LoginScreen.checkInput(user, pass)) {
-            Api.authentificateUser(user, pass, LoginScreen.loginSuccess, LoginScreen.loginFailed, LoginScreen.connexionFailed).then(()=>doneLoading());
+            Api.authentificateUser(user, pass, this.state.abortSignal, LoginScreen.loginSuccess, LoginScreen.loginFailed, LoginScreen.connexionFailed).then(()=>doneLoading());
         } else {
             alert("Please enter your login Username and Password");
             doneLoading();
@@ -100,7 +113,6 @@ export default class LoginScreen extends Component {
     }
 
     render() {
-
         return (
             <TouchableOpacity activeOpacity={1} onPress={Keyboard.dismiss}>
                 <Wallpaper>
@@ -108,7 +120,7 @@ export default class LoginScreen extends Component {
                         <Logo/>
 
                         <Form handleUsername={this.handleUsername} handlePassword={this.handlePassword}/>
-                        <ButtonSubmit handleSubmit={this.login}/>
+                        <ButtonSubmit text={"LOGIN"} handleStopSubmit={this.handleStopSubmit}  handleSubmit={this.login}/>
 
                         <SignupSection
                             //signIngUrl={/*TODO*/} forgotPassordUrl={/*TODO*/}
