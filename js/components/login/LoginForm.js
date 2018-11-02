@@ -16,7 +16,7 @@ import usernameImg from '../../../assets/images/username.png';
 import passwordImg from '../../../assets/images/password.png';
 import eyeImg from '../../../assets/images/eye_black.png';
 
-export default class Form extends Component {
+export default class LoginForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -66,7 +66,7 @@ export default class Form extends Component {
 
 
 
-Form.propTypes = {
+LoginForm.propTypes = {
     handlePassword: PropTypes.func.isRequired,
     handleUsername: PropTypes.func.isRequired
 };
