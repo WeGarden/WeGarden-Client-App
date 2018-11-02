@@ -15,13 +15,13 @@ export default class SignupSection extends Component {
     }
 
     _onPress(){
-        this._onGrow();
+      //  this._onGrow();
 
 
-        setTimeout(() => {
+      //  setTimeout(() => {
             Actions.signinScreen();
-            this.growAnimated.setValue(0);
-        }, 1000);
+        //    this.growAnimated.setValue(0);
+       // }, 1000);
     }
 
     _onGrow() {
@@ -39,16 +39,16 @@ export default class SignupSection extends Component {
     }
 
     render() {
-        const changeScale = this.growAnimated.interpolate({
-            inputRange: [0, 1],
-            outputRange: [1, 3000],
-        });
+        // const changeScale = this.growAnimated.interpolate({
+        //     inputRange: [0, 1],
+        //     outputRange: [1, 3000],
+        // });
         return (
             <View style={styles.container}>
                 <Text onPress={this.handleSignIn} style={styles.text}>Create Account</Text>
-                <Animated.View
-                    style={[styles.growinCircle, {transform: [{scale: changeScale}]}]}
-                />
+                {/*<Animated.View*/}
+                    {/*style={[styles.growinCircle, {transform: [{scale: changeScale}]}]}*/}
+                {/*/>*/}
                 <Text style={styles.text}>Forgot Password?</Text>
             </View>
         );
@@ -72,13 +72,13 @@ const styles = StyleSheet.create({
         color: 'white',
         backgroundColor: 'transparent',
     },
-    growinCircle:{
-            height: MARGIN,
-            width: MARGIN,
-            borderWidth: 1,
-            borderColor: 'white',
-            borderRadius: 100,
-            alignSelf: 'center',
-            backgroundColor: ANIMATION_COLOR
-    }
+    // growinCircle:{
+    //         height: MARGIN,
+    //         width: MARGIN,
+    //         borderWidth: 1,
+    //         borderColor: 'white',
+    //         borderRadius: 100,
+    //         alignSelf: 'center',
+    //         backgroundColor: ANIMATION_COLOR
+    // }
 });
