@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import Logo from './Logo';
 import Wallpaper from './Wallpaper';
-import { AsyncStorage } from "react-native";
+import {AsyncStorage, View} from "react-native";
 import ButtonSubmit from './ButtonSubmit';
-import Api from '../utils/ApiCalls';
+import Api from '../../utils/ApiCalls';
 import { KeyboardAvoidingView, TouchableOpacity } from "react-native";
 import { Keyboard } from 'react-native';
 import { Actions } from "react-native-router-flux/index";
+import SignupForm from "./SignupForm";
+import Dimensions from "Dimensions";
 
 
 const MIN_PASS_LENGTH = 6;
@@ -26,6 +28,7 @@ export default class SignupScreen extends Component {
         this.handleUsername = this.handleUsername.bind(this);
         this.handleEmail = this.handleEmail.bind(this);
         this.signupAction = this.signupAction.bind(this);
+
     }
 
     /**
@@ -66,17 +69,24 @@ export default class SignupScreen extends Component {
     }
 
     /**
-     * login function, calls checkinput then tries to authentificate user, 
+     * signup function, calls checkinput then tries to authentificate user,
      * 
      * @param {function} doneLoading 
      */
     signupAction(doneLoading) {
         let user = this.state.username;
         let pass = this.state.password;
+        let passConfirm = this.state.confirmPassowrd;
+        let email = this.state.email;
 
-        if (this.checkInput(user, pass)) {
-            Api.signup(user, pass, this.signinSuccess, 
-                this.alreadyExists, this.connexionFailed).then(() => {
+        if (SignupScreen.checkInput(user, pass,passConfirm, email)) {
+            Api.signup(
+                user,
+                pass,
+                this.signinSuccess,
+                this.alreadyExists,
+                this.connexionFailed
+            ).then(() => {
                     doneLoading();
                     Actions.pop();
                 });
@@ -87,12 +97,12 @@ export default class SignupScreen extends Component {
     }
 
 
-    static checkPasswordLength() {
-        return this.state.password.length >= MIN_PASS_LENGTH;
+    static checkPasswordLength(pass) {
+        return pass.length >= MIN_PASS_LENGTH;
     }
 
-    static checkPasswordConfirm() {
-        return this.state.password === this.state.confirmPassowrd;
+    static checkPasswordConfirm(pass,passConfirm) {
+        return pass === passConfirm;
     }
 
 
@@ -101,28 +111,29 @@ export default class SignupScreen extends Component {
      * true if inputs are correct, false otherwise
      * @param user the username
      * @param pass the password
+     * @param passConfirm the confirmation password
+     * @param email the email address
      * @returns true if inputs are correct, false otherwise
      */
-    static checkInput(user, pass) {
-        if (this.checkPasswordLength()) {
+    static checkInput(user,pass,passConfirm,email) {
+        if (SignupScreen.checkPasswordLength(pass)) {
             alert("Password must have at least 6 caracters");
-        } if (this.checkPasswordConfirm()) {
+        } if (SignupScreen.checkPasswordConfirm(pass,passConfirm)) {
             alert("Password's confirmation doesn't match");
         }
 
-
-        return user && pass;
+        return user && pass && email;
     }
 
     /**
-     * login api success callback function
+     * sign in api success callback function
      * @param res json of the api response {'accessToken':?}
      */
     static signinSuccess(res) {
         //login
         alert(res.accessToken);
         AsyncStorage.setItem("userToken", res.accessToken);
-        Actions.signinScreen() // TODO change it to home page
+        //Actions.signinScreen() // TODO change it to home page
     }
 
 
@@ -134,53 +145,55 @@ export default class SignupScreen extends Component {
         alert("Connexion failed" + JSON.stringify(error));
     }
 
-    /**
-     * login failed callback function
-     */
-    static loginFailed() {
-        alert("Wrong Username/Password");
-    }
-
     render() {
 
         return (
             <TouchableOpacity activeOpacity={1} onPress={Keyboard.dismiss}>
-                <Wallpaper>
-                    <KeyboardAvoidingView behavior='padding' style={{ flex: 1 }}>
-                        <Logo />
+                <View
+                    style={{
+                        width: Dimensions.get('window').width,
+                        height: Dimensions.get('window').height
+                    }}
+                >
+                    <KeyboardAvoidingView
+                        behavior='padding'
+                        style={{
+                            flex: 1,
+                            flexDirection: 'column',
+                            justifyContent: 'center',
+                           // alignItems: 'stretch'
+                        }}
+                    >
 
                         <SignupForm handleEmail={this.handleEmail}
                             handlePassword={this.handlePassword}
                             handleConfirmPassword={this.handleConfirmPassword}
                             handleUsername = {this.handleUsername}
                         />
-                        <ButtonSubmit handleSubmit={this.signupAction} />
+                        <ButtonSubmit text={"SIGNUP"} handleSubmit={this.signupAction} />
 
-                        <SignupSection
-                        //signIngUrl={/*TODO*/} forgotPassordUrl={/*TODO*/}
-                        />
                     </KeyboardAvoidingView>
-                </Wallpaper>
+                </View>
             </TouchableOpacity>
         );
     }
 }
 
 
-const styles = StyleSheet.create({
-    containerForm: {
-        //flex: 1,
-        height: 100,
-        alignItems: 'center'
-    },
-    btnEye: {
-        position: 'absolute',
-        top: 55,
-        right: 28,
-    },
-    iconEye: {
-        width: 25,
-        height: 25,
-        tintColor: 'rgba(0,0,0,0.2)',
-    },
-});
+// const styles = StyleSheet.create({
+//     containerForm: {
+//         //flex: 1,
+//         height: 100,
+//         alignItems: 'center'
+//     },
+//     btnEye: {
+//         position: 'absolute',
+//         top: 55,
+//         right: 28,
+//     },
+//     iconEye: {
+//         width: 25,
+//         height: 25,
+//         tintColor: 'rgba(0,0,0,0.2)',
+//     },
+// });
