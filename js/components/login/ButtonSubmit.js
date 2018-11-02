@@ -33,10 +33,11 @@ export default class ButtonSubmit extends Component {
         this.buttonAnimated = new Animated.Value(0);
         this.growAnimated = new Animated.Value(0);
         this._onPress = this._onPress.bind(this);
-        this.doneLoading = this.doneLoading.bind(this);
+        this.stopLoading = this.stopLoading.bind(this);
     }
 
-    doneLoading(){
+    stopLoading(){
+        this.props.handleStopSubmit();
         this.setState({isLoading:false});
         Animated.timing(this.buttonAnimated, {
             toValue: 0,
@@ -47,7 +48,8 @@ export default class ButtonSubmit extends Component {
 
     _onPress() {
         if (this.state.isLoading) {
-            this.doneLoading();
+            this.stopLoading();
+            return;
         }
 
         this.setState({isLoading: true});
@@ -56,7 +58,7 @@ export default class ButtonSubmit extends Component {
             duration: 200,
             easing: Easing.linear,
         }).start();
-        this.props.handleSubmit(this.doneLoading);
+        this.props.handleSubmit(this.stopLoading);
 
     }
 
@@ -80,7 +82,7 @@ export default class ButtonSubmit extends Component {
                         {this.state.isLoading ? (
                             <Image source={spinner} style={styles.image}/>
                         ) : (
-                            <Text style={styles.text}>LOGIN</Text>
+                            <Text style={styles.text}>{this.props.text}</Text>
                         )}
                     </TouchableOpacity>
                 </Animated.View>
@@ -91,13 +93,15 @@ export default class ButtonSubmit extends Component {
 
 
 ButtonSubmit.propsTypes = {
-    handleLogin: PropTypes.func.isRequired
+    handleSubmit: PropTypes.func.isRequired,
+    handleStopSubmit: PropTypes.func.isRequired
 }
 
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        height:40,
+        backgroundColor:'red',
         //top: -95,
         alignItems: 'center',
         justifyContent: 'flex-start',
