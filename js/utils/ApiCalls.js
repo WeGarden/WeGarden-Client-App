@@ -1,4 +1,4 @@
-const API_SERVER_URL = "http://172.20.10.2:8080";
+const API_SERVER_URL = "http://wegardenapi.azurewebsites.net:80";
 const LOGIN_PATH = "/api/auth/signin";
 const SIGNUP_PATH = "/api/auth/signup";
 
@@ -35,7 +35,12 @@ export default class ApiCalls {
     }
 
 
-    static signup(username,password,email,callback400,callback200,callbackOtherError){
+    static signup(username,password,email,
+                  callback200,
+                  alreadyUsedMail,
+                  alreadyUsedUsername,
+                  callback400,
+                  callbackOtherError){
         return fetch(API_SERVER_URL + SIGNUP_PATH, {
             method: 'post',
             headers: {
@@ -50,11 +55,21 @@ export default class ApiCalls {
         }).then((res) => {
                 res.json().then(resJson => {
                     if(res.status === 400){
-                        callback400(resJson);
+                        if(resJson.status === 1) {
+                            //already used username
+                            alreadyUsedMail();
+                        }else if(resJson.status === 2){
+                            //already used mail
+                            alreadyUsedUsername();
+                        }else {
+                            callback400(resJson);
+                        }
                     }else if(res.status === 200){
                         callback200(resJson);
+
                     }else{
                         callbackOtherError(resJson);
+
                     }
                 });
             }
