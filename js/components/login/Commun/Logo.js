@@ -2,13 +2,13 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {StyleSheet, View, Text, Image, KeyboardAvoidingView} from 'react-native';
 
-import logoImg from '../../../assets/images/logo.png';
+import logoImg from '../../../../assets/images/logo.png';
 
 const APP_TITLE = "WeGarden";
 export default class Logo extends Component {
   render() {
       return (
-      <View style={styles.container}>
+      <View style={styles.globalContainer}>
         <KeyboardAvoidingView behavior={'height'}>
         <Image source={logoImg} style={styles.image} />
         </KeyboardAvoidingView>
@@ -19,7 +19,7 @@ export default class Logo extends Component {
 }
 
 const styles = StyleSheet.create({
-  container: {
+  globalContainer: {
     flex: 5,
     alignItems: 'center',
     justifyContent: 'center',

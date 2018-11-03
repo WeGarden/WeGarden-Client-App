@@ -1,12 +1,12 @@
-import React, { Component } from 'react';
-import Logo from './Logo';
-import Wallpaper from './Wallpaper';
-import {AsyncStorage, View} from "react-native";
-import ButtonSubmit from './ButtonSubmit';
-import Api from '../../utils/ApiCalls';
-import { KeyboardAvoidingView, TouchableOpacity } from "react-native";
-import { Keyboard } from 'react-native';
-import { Actions } from "react-native-router-flux/index";
+import React, {Component} from 'react';
+import Logo from '../Commun/Logo';
+import Wallpaper from '../LoginScreen/Wallpaper';
+import {AsyncStorage, StyleSheet, Text, View} from "react-native";
+import ButtonSubmit from '../Commun/ButtonSubmit';
+import Api from '../../../utils/ApiCalls';
+import {KeyboardAvoidingView, TouchableOpacity} from "react-native";
+import {Keyboard} from 'react-native';
+import {Actions} from "react-native-router-flux/index";
 import SignupForm from "./SignupForm";
 import Dimensions from "Dimensions";
 
@@ -33,45 +33,45 @@ export default class SignupScreen extends Component {
 
     /**
      * username setter
-     * 
+     *
      * @param {String} text entered username
      */
     handleUsername(text) {
-        this.setState({ username: text })
+        this.setState({username: text})
     }
 
 
     /**
      * email setter
-     * 
+     *
      * @param {String} text entered username
      */
     handleEmail(text) {
-        this.setState({ email: text })
+        this.setState({email: text})
     }
 
     /**
      * password setter
-     * 
+     *
      * @param {String} text entered password
      */
     handlePassword(text) {
-        this.setState({ password: text })
+        this.setState({password: text})
     }
 
     /**
      * confirm password setter
-     * 
+     *
      * @param {String} text entered password
      */
     handleConfirmPassword(text) {
-        this.setState({ confirmPassword: text })
+        this.setState({confirmPassword: text})
     }
 
     /**
      * signup function, calls checkinput then tries to authentificate user,
-     * 
-     * @param {function} doneLoading 
+     *
+     * @param {function} doneLoading
      */
     signupAction(doneLoading) {
         let user = this.state.username;
@@ -79,19 +79,22 @@ export default class SignupScreen extends Component {
         let passConfirm = this.state.confirmPassowrd;
         let email = this.state.email;
 
-        if (SignupScreen.checkInput(user, pass,passConfirm, email)) {
+        if (SignupScreen.checkInput(user, pass, passConfirm, email)) { // Check if the inputs are ready to be sent
             Api.signup(
                 user,
                 pass,
-                this.signinSuccess,
-                this.alreadyExists,
-                this.connexionFailed
+                email,
+                SignupScreen.signinSuccess,
+                SignupScreen.alreadyExistsMail,
+                SignupScreen.alreadyExistsUsername,
+                SignupScreen.connexionFailed,
+                SignupScreen.connexionFailed,
             ).then(() => {
-                    doneLoading();
-                    Actions.pop();
-                });
+                doneLoading();
+                Actions.pop();
+            });
         } else {
-            alert("Please enter your login Username and Password");
+            alert("Please check your fields");
             doneLoading();
         }
     }
@@ -101,10 +104,9 @@ export default class SignupScreen extends Component {
         return pass.length >= MIN_PASS_LENGTH;
     }
 
-    static checkPasswordConfirm(pass,passConfirm) {
+    static checkPasswordConfirm(pass, passConfirm) {
         return pass === passConfirm;
     }
-
 
 
     /**
@@ -115,10 +117,11 @@ export default class SignupScreen extends Component {
      * @param email the email address
      * @returns true if inputs are correct, false otherwise
      */
-    static checkInput(user,pass,passConfirm,email) {
+    static checkInput(user, pass, passConfirm, email) {
         if (SignupScreen.checkPasswordLength(pass)) {
             alert("Password must have at least 6 caracters");
-        } if (SignupScreen.checkPasswordConfirm(pass,passConfirm)) {
+        }
+        if (SignupScreen.checkPasswordConfirm(pass, passConfirm)) {
             alert("Password's confirmation doesn't match");
         }
 
@@ -142,35 +145,44 @@ export default class SignupScreen extends Component {
      * @param error json of the api error
      */
     static connexionFailed(error) {
-        alert("Connexion failed" + JSON.stringify(error));
+        alert("Connexion failed: " + JSON.stringify(error));
+    }
+
+    /**
+     * Shows alert for existing email error
+     */
+    static alreadyExistsMail() {
+        alert("email already exists")
+    }
+
+
+    /**
+     * Shows alert for existing username error
+     */
+    static alreadyExistsUsername() {
+        alert("username already exists")
     }
 
     render() {
 
         return (
             <TouchableOpacity activeOpacity={1} onPress={Keyboard.dismiss}>
-                <View
-                    style={{
-                        width: Dimensions.get('window').width,
-                        height: Dimensions.get('window').height
-                    }}
-                >
+                <View style={styles.globalContainer}>
                     <KeyboardAvoidingView
                         behavior='padding'
-                        style={{
-                            flex: 1,
-                            flexDirection: 'column',
-                            justifyContent: 'center',
-                           // alignItems: 'stretch'
-                        }}
+                        style={styles.container}
                     >
 
+                        {/*<Text>*/}
+                        {/*Signup*/}
+                        {/*</Text>*/}
+
                         <SignupForm handleEmail={this.handleEmail}
-                            handlePassword={this.handlePassword}
-                            handleConfirmPassword={this.handleConfirmPassword}
-                            handleUsername = {this.handleUsername}
+                                    handlePassword={this.handlePassword}
+                                    handleConfirmPassword={this.handleConfirmPassword}
+                                    handleUsername={this.handleUsername}
                         />
-                        <ButtonSubmit text={"SIGNUP"} handleSubmit={this.signupAction} />
+                        <ButtonSubmit text={"SIGNUP"} handleSubmit={this.signupAction}/>
 
                     </KeyboardAvoidingView>
                 </View>
@@ -180,7 +192,22 @@ export default class SignupScreen extends Component {
 }
 
 
-// const styles = StyleSheet.create({
+const styles = StyleSheet.create({
+    globalContainer: {
+        width: Dimensions.get('window').width,
+        height: Dimensions.get('window').height
+
+    },
+    container: {
+        backgroundColor: 'rgba(0,0,0,0.2)',
+        flex: 1,
+        flexDirection: 'column',
+        justifyContent: 'center',
+        // alignItems: 'stretch'
+    }
+})
+
+
 //     containerForm: {
 //         //flex: 1,
 //         height: 100,

@@ -13,13 +13,14 @@ export default class LoginComponent extends Component {
                            component={LoginScreen}
                            animation='fade'
                            hideNavBar={true}
+                           initial={true}
                     />
-                    <Scene key="signinScreen"
+                    <Scene key="signupScreen"
                            component={SignupScreen}
                            //animation='fade'
+                           title="Signup"
                            direction="vertical"
-                           hideNavBar={true}
-                           initial={true}
+                           hideNavBar={false}
                     />
                 </Scene>
             </Router>

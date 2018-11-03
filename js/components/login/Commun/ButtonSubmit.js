@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import {Actions, ActionConst} from 'react-native-router-flux';
 
-import spinner from '../../../assets/images/loading.gif';
+import spinner from '../../../../assets/images/loading.gif';
 
 const BUTTONCOLOR = '#209d12';
 const BORDER_COLOR = 'rgba(32, 157, 18, 1)';
@@ -73,7 +73,7 @@ export default class ButtonSubmit extends Component {
         });
 
         return (
-            <View style={styles.container}>
+            <View style={styles.globalContainer}>
                 <Animated.View style={{width: changeWidth}}>
                     <TouchableOpacity
                         style={styles.button}
@@ -99,9 +99,8 @@ ButtonSubmit.propsTypes = {
 
 
 const styles = StyleSheet.create({
-    container: {
+    globalContainer: {
         height:40,
-        backgroundColor:'red',
         //top: -95,
         alignItems: 'center',
         justifyContent: 'flex-start',

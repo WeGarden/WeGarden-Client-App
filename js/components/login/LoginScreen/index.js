@@ -1,12 +1,12 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import Logo from './Logo';
+import Logo from '../Commun/Logo';
 import Form from './LoginForm';
 import Wallpaper from './Wallpaper';
 import { AsyncStorage } from "react-native";
-import ButtonSubmit from './ButtonSubmit';
+import ButtonSubmit from '../Commun/ButtonSubmit';
 import SignupSection from './SignupSection';
-import Api from '../../utils/ApiCalls';
+import Api from '../../../utils/ApiCalls';
 import {KeyboardAvoidingView, TouchableOpacity} from "react-native";
 import {Keyboard} from 'react-native';
 import {Actions} from "react-native-router-flux/index";
