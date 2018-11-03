@@ -4,17 +4,13 @@ import Dimensions from 'Dimensions';
 import {
   StyleSheet,
   View,
-  TouchableOpacity,
-  Image,
 } from 'react-native';
 
-import UserInput from './UserInput';
-import ButtonSubmit from './ButtonSubmit';
-import SignupSection from './SignupSection';
+import UserInput from '../Commun/UserInput';
 
-import usernameImg from '../../../assets/images/username.png';
-import passwordImg from '../../../assets/images/password.png';
-import eyeImg from '../../../assets/images/eye_black.png';
+import usernameImg from '../../../../assets/images/username.png';
+import passwordImg from '../../../../assets/images/password.png';
+
 
 export default class LoginForm extends Component {
   constructor(props) {
@@ -34,7 +30,7 @@ export default class LoginForm extends Component {
 
   render() {
     return (
-      <View style={styles.container}>
+      <View style={styles.globalContainer}>
         <UserInput
           source={usernameImg}
           placeholder="Username"
@@ -52,12 +48,12 @@ export default class LoginForm extends Component {
           autoCorrect={false}
           handler={this.props.handlePassword}
         />
-        <TouchableOpacity
-          activeOpacity={0.7}
-          style={styles.btnEye}
-          onPress={this.showPass}>
-          <Image source={eyeImg} style={styles.iconEye} />
-        </TouchableOpacity>
+        {/*<TouchableOpacity*/}
+          {/*activeOpacity={0.7}*/}
+          {/*style={styles.btnEye}*/}
+          {/*onPress={this.showPass}>*/}
+          {/*<Image source={eyeImg} style={styles.iconEye} />*/}
+        {/*</TouchableOpacity>*/}
       </View>
     );
   }
@@ -81,7 +77,7 @@ const DEVICE_HEIGHT = Dimensions.get('window').height;
 
 
 const styles = StyleSheet.create({
-  container: {
+  globalContainer: {
     //flex: 1,
       height:100,
     alignItems: 'center'
