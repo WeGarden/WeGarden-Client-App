@@ -1,7 +1,7 @@
-import React, {Component} from 'react';
+import React, {Component,} from 'react';
 import Logo from '../Commun/Logo';
 import Wallpaper from '../LoginScreen/Wallpaper';
-import {AsyncStorage, StyleSheet, Text, View} from "react-native";
+import {AsyncStorage, StyleSheet, Text, View, SafeAreaView, StatusBar} from "react-native";
 import ButtonSubmit from '../Commun/ButtonSubmit';
 import Api from '../../../utils/ApiCalls';
 import {KeyboardAvoidingView, TouchableOpacity} from "react-native";
@@ -166,33 +166,49 @@ export default class SignupScreen extends Component {
     render() {
 
         return (
-            <TouchableOpacity activeOpacity={1} onPress={Keyboard.dismiss}>
-                <View style={styles.globalContainer}>
-                    <KeyboardAvoidingView
-                        behavior='padding'
-                        style={styles.container}
-                    >
+            <SafeAreaView>
 
-                        {/*<Text>*/}
-                        {/*Signup*/}
-                        {/*</Text>*/}
+                <TouchableOpacity activeOpacity={1} onPress={Keyboard.dismiss}>
+                    <View style={styles.titleContainer}>
+                        <Text>
+                            Signup
+                        </Text>
+                    </View>
+                    <StatusBar
+                        backgroundColor="blue"
+                        barStyle="light-content"
+                    />
+                    <View style={styles.globalContainer}>
+                        <KeyboardAvoidingView
+                            behavior='padding'
+                            style={styles.container}
+                        >
+                            {/*<Text>*/}
+                            {/*Signup*/}
+                            {/*</Text>*/}s
+                            <SignupForm handleEmail={this.handleEmail}
+                                        handlePassword={this.handlePassword}
+                                        handleConfirmPassword={this.handleConfirmPassword}
+                                        handleUsername={this.handleUsername}
+                            />
+                            <ButtonSubmit text={"SIGNUP"} handleSubmit={this.signupAction}/>
 
-                        <SignupForm handleEmail={this.handleEmail}
-                                    handlePassword={this.handlePassword}
-                                    handleConfirmPassword={this.handleConfirmPassword}
-                                    handleUsername={this.handleUsername}
-                        />
-                        <ButtonSubmit text={"SIGNUP"} handleSubmit={this.signupAction}/>
-
-                    </KeyboardAvoidingView>
-                </View>
-            </TouchableOpacity>
+                        </KeyboardAvoidingView>
+                    </View>
+                </TouchableOpacity>
+            </SafeAreaView>
         );
     }
 }
 
 
 const styles = StyleSheet.create({
+    titleContainer: {
+        height: 50,
+        alignItems: 'center',
+        justifyContent: 'center'
+
+    },
     globalContainer: {
         width: Dimensions.get('window').width,
         height: Dimensions.get('window').height

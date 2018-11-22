@@ -20,7 +20,7 @@ export default class LoginComponent extends Component {
                            //animation='fade'
                            title="Signup"
                            direction="vertical"
-                           hideNavBar={false}
+                           hideNavBar={true}
                     />
                 </Scene>
             </Router>
