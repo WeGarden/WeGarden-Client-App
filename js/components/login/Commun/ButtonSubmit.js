@@ -15,7 +15,7 @@ import {Actions, ActionConst} from 'react-native-router-flux';
 
 import spinner from '../../../../assets/images/loading.gif';
 
-const BUTTONCOLOR = '#209d12';
+const BUTTONCOLOR = 'green';
 const BORDER_COLOR = 'rgba(32, 157, 18, 1)';
 const ANIMATION_COLOR = 'rgba(32, 157, 18, 0.8)';
 const DEVICE_WIDTH = Dimensions.get('window').width;
@@ -117,8 +117,8 @@ const styles = StyleSheet.create({
         height: MARGIN,
         width: MARGIN,
         marginTop: -MARGIN,
-        borderWidth: 1,
-        borderColor: BORDER_COLOR,
+       // borderWidth: 1,
+       // borderColor: BORDER_COLOR,
         borderRadius: 100,
         alignSelf: 'center',
         zIndex: 99,
@@ -126,7 +126,6 @@ const styles = StyleSheet.create({
     },
     text: {
         color: 'white',
-        backgroundColor: 'transparent',
     },
     image: {
         width: 24,
