@@ -1,12 +1,13 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import LoginComponent from "./js/components/login";
+import CreateGarden from "./js/components/CreateGarden/router";
+
 
 
 export default class App extends React.Component {
   render() {
     return (
-        <LoginComponent />
+        <CreateGarden />
     );
   }
 }
