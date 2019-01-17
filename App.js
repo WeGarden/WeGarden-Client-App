@@ -1,22 +1,14 @@
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import CreateGarden from "./js/components/CreateGarden/router";
+import {Component} from "react";
+import React from "react";
+
+import GardenRooter from "./js/components/ListGarden/router";
 
 
 
-export default class App extends React.Component {
+export default class App extends Component {
   render() {
     return (
-        <CreateGarden />
+        <GardenRooter />
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});

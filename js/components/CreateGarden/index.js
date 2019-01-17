@@ -6,7 +6,7 @@ import {
 } from 'react-native';
 import {Actions} from "react-native-router-flux";
 import UserInput from "../Commun/UserInput";
-import {Ionicons} from "@expo/vector-icons/";
+import {Ionicons} from "@expo/vector-icons";
 import {Location} from 'expo';
 import ButtonSelect from "../Commun/ButtonSelect";
 
@@ -31,7 +31,7 @@ export default class CreateGarden extends Component {
 
 
         this.state = {
-            title: props.title,
+            name: props.name,
             place: '',
             time: props.time,
             private: false,
