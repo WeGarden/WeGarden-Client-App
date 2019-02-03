@@ -14,10 +14,10 @@ import ButtonSelect from "../Commun/ButtonSelect";
 export default class CreateGarden extends Component {
 
     _getLocationAsync = async () => {
-        let { status } = await Expo.Permissions.askAsync(Expo.Permissions.LOCATION);
+        let {status} = await Expo.Permissions.askAsync(Expo.Permissions.LOCATION);
         if (status !== 'granted') {
             this.setState({
-                location:null,
+                location: null,
             });
             return
         }
@@ -64,14 +64,14 @@ export default class CreateGarden extends Component {
         this.onActivityCreated();
     }
 
-    onFinish(){
+    onFinish() {
         this.props.onFinish();
     }
 
     async onActivityCreated() {
         await this._getLocationAsync();
-        Actions.createGardenScreen2({onFinish:this.onFinish,location:this.state.location});
-      //  Actions.pop();
+        Actions.createGardenScreen2({onFinish: this.onFinish, location: this.state.location});
+        //  Actions.pop();
     }
 
     on401() {
@@ -99,13 +99,18 @@ export default class CreateGarden extends Component {
 
     render() {
         return (
-            <SafeAreaView style={{flex:1}}>
-            <KeyboardAvoidingView style={styles.container} behavior="padding" enabled={true}>
-                <Ionicons style={{position: "absolute", top: 0, right: 10}} color="black"
+            <SafeAreaView
+                style={styles.container}
+            >
+                {null
+                    //<KeyboardAvoidingView style={styles.container} behavior="padding" enabled={true}>}
+                }
+                <View style={{flex:1, flexDirection:"row", alignItems:"center"}}>
+                    <Text style={styles.title}>New garden</Text>
+                <Ionicons style={{position: "relative", top: 0, right: 0}} color="black"
                           onPress={this.onCancelPress}
                           name={"md-close"} size={40}/>
-                <Text style={styles.title}>New garden</Text>
-
+                </View>
                 <View style={{flex: 1, alignItems:"center"}}>
                     <UserInput
                         source={"md-text"}
@@ -119,7 +124,7 @@ export default class CreateGarden extends Component {
                     />
                 </View>
 
-                <View style={{flex: 1, alignItems:"center"}}>
+                <View style={{flex: 1, alignItems: "center"}}>
                     <UserInput
                         source={"md-text"}
                         style={styles.input}
@@ -152,10 +157,11 @@ export default class CreateGarden extends Component {
                     </View>
                 </View>
 
-                <View style={{flex: 1, justifyContent:"center"}}>
-                    <ButtonSelect text={"Private"} checked={this.state.private} onPress={() => this.setState((state, props) => {
-                        return {private: !state.private};
-                    })} />
+                <View style={{flex: 1, justifyContent: "center"}}>
+                    <ButtonSelect text={"Private"} checked={this.state.private}
+                                  onPress={() => this.setState((state, props) => {
+                                      return {private: !state.private};
+                                  })}/>
                 </View>
                 <View style={{flex: 1, justifyContent: "center"}}>
                     <TouchableOpacity style={styles.bouton}
@@ -164,7 +170,9 @@ export default class CreateGarden extends Component {
                         <Text style={{fontSize: 25, fontWeight: "bold", color: "white"}}>Next</Text>
                     </TouchableOpacity>
                 </View>
-            </KeyboardAvoidingView>
+                {null
+                    //</KeyboardAvoidingView>
+                }
             </SafeAreaView>
         );
     }
@@ -174,12 +182,13 @@ const styles = StyleSheet.create({
         alignItems: "center",
         flex: 1,
         justifyContent: "space-between",
-        paddingHorizontal: 25,
+        paddingTop: 25,
     },
     input: {
         flex: 1,
     },
     title: {
+        flex:1,
         marginBottom: 20,
         fontSize: 25,
         textAlign: 'center'
