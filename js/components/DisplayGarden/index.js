@@ -1,12 +1,13 @@
 import {Component} from "react";
-import {StyleSheet, Animated, ListView, View, Text, RefreshControl} from 'react-native';
+import {StyleSheet, Animated, ListView, View, Text, RefreshControl, TouchableOpacity} from 'react-native';
 import {ZoneListComponent} from './ZoneListComponent';
 import React from "react";
 import HeaderComponent from "./HeaderComponent";
+import {MapView} from "expo";
 
 
 const HEADER_EXPANDED_HEIGHT = 300;
-const HEADER_COLLAPSED_HEIGHT = 60;
+const HEADER_COLLAPSED_HEIGHT = 50;
 
 const zones = [
     {name: "zone1"},
@@ -106,12 +107,41 @@ export default class DisplayGarden extends Component {
                 });
                 return (
                     <View style={styles.container}>
-                        <Animated.View style={{height: headerHeight, justifyContent: 'center'}}>
-                            <Text style={{fontSize: 20,flex:2}}>Garden Number One</Text>
-                            <Text style={{flex:3}}>Details: Bla bla bla</Text>
-                            <View style={{flex:1, flexDirection: 'row', alignItems: 'center',}}>
-                                <Text style={{flex:1, backgroundColor:'green'}}>Observation</Text>
-                                <Text style={{flex:1, backgroundColor:'green'}}>Actions</Text>
+                        <Animated.View style={{height: headerHeight,}}>
+                            <View style={{flex: 1}}>
+                                <MapView style={styles.bar}
+                                         showsMyLocationButton={false}
+                                         showsPointsOfInterest={false}
+                                         showsTraffic={false}
+                                         zoomEnabled={false}
+                                         minZoomLevel={10}
+                                         zoomControlEnabled={false}
+                                         scrollEnabled={false}
+                                         rotateEnabled={false}
+                                         toolbarEnabled={false}
+                                         loadingEnabled={true}
+                                         moveOnMarkerPress={false}
+                                />
+                                <View style={{flexDirection: "row", justifyContent: "space-evenly"}}>
+                                    <TouchableOpacity style={{
+                                        flex: 1,
+                                        alignItems: "center",
+                                        justifyContent: "center",
+                                        height: 50
+                                    }}
+                                    >
+                                        <Text>Observations</Text>
+                                    </TouchableOpacity>
+                                    <View style={{backgroundColor: "black", width: 1}}/>
+                                    <TouchableOpacity style={{
+                                        flex: 1,
+                                        alignItems: "center",
+                                        justifyContent: "center",
+                                        height: 50
+                                    }}>
+                                        <Text>Actions</Text>
+                                    </TouchableOpacity>
+                                </View>
                             </View>
                         </Animated.View>
                         <ListView
@@ -134,37 +164,51 @@ export default class DisplayGarden extends Component {
                             renderRow={this._renderItem}
                         />
                     </View>
-            );
+                );
             } else {
                 return <View style={styles.container}
-                refreshControl={
-                    <RefreshControl
-                        refreshing={this.state.refreshing}
-                        onRefresh={this._onRefresh}
-                    />}
+                             refreshControl={
+                                 <RefreshControl
+                                     refreshing={this.state.refreshing}
+                                     onRefresh={this._onRefresh}
+                                 />}
                 >
-                <Text>No zone found</Text>
+                    <Text>No zone found</Text>
                 </View>
             }
-            }
-            }
+        }
+    }
 
-            _renderItem(rowData) {
-                return <ZoneListComponent
-                name={rowData.name}
-                category={rowData.category}
-                place={rowData.place}
-                date={rowData.date}
-                />;
-            }
-            }
+    _renderItem(rowData) {
+        return <ZoneListComponent
+            name={rowData.name}
+            category={rowData.category}
+            place={rowData.place}
+            date={rowData.date}
+        />;
+    }
+}
 
-            const styles = StyleSheet.create({
-                container: {
-                flex: 1,
-                backgroundColor: "#e2e2e2",
-                alignItems: 'center',
-                justifyContent: 'center',
-                paddingTop: 55,
-            }
-            });
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: "#e2e2e2",
+        //alignItems: 'center',
+        //justifyContent: 'center',
+    },
+
+    header: {
+        //  position: 'absolute',
+        //  top: 0,
+        //  left: 0,
+        //  right: 0,
+        backgroundColor: '#6fbd00',
+        //flex:1
+        //overflow: 'hidden',
+    },
+    bar: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+});
