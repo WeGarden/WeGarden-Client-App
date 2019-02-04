@@ -9,7 +9,8 @@ import CreateGarden from "./js/components/CreateGarden";
 import GardenLocation from "./js/components/GardenLocation";
 import DisplayGarden from "./js/components/DisplayGarden";
 import {Ionicons} from "@expo/vector-icons";
-
+import OneZoneScreen from "./js/components/OneZoneScreen";
+import CreateAreaScreen from "./js/components/CreateAreaScreen";
 
 export default class App extends Component {
 
@@ -25,9 +26,9 @@ export default class App extends Component {
                     tabBarLabel={"Home"}
                     tabBarLabelStyle={{color: "green"}}
                     hideNavBar={true}
+                    title={"Home"}
                 >
-                    <Modal
-                    >
+                    <Modal>
                         <Scene
                             hideNavBar={false}
                             title={"Gardens"}
@@ -45,8 +46,8 @@ export default class App extends Component {
                                    title={"Gardens"}
                                    hideNavBar={true}
                             />
-                        </Scene>
 
+                        </Scene>
 
                         <Scene key={"createGardenScreen"}
                                hideNavBar={true}
@@ -62,10 +63,15 @@ export default class App extends Component {
                         </Scene>
 
                     </Modal>
+
                     <Scene key={"oneGardenScreen"}
                            component={DisplayGarden}
-
+                           hideNavBar={false}
                     />
+
+                        <Scene key={"AreaScreen"} hideNavBar={false} navigationBarStyle={{backgroundColor: "#1c4c00"}}
+                               titleStyle={{color: "white"}} component={OneZoneScreen}/>
+                        <Scene key={"CreateAreaScreen"} component={CreateAreaScreen}/>
                 </Scene>
             </Tabs>
         </Router>

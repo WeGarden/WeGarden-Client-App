@@ -1,16 +1,17 @@
 import {Component,} from "react";
-import {StyleSheet, View, Text, ListView, FlatList} from "react-native";
+import {TouchableOpacity, StyleSheet, View, Text, ListView, FlatList} from "react-native";
 import PlantComponent from "./PlantComponent";
 import React from "react";
+import {Actions} from "react-native-router-flux";
 
 const zones = [
-    {key: '1',name: "zone1"},
-    {key: '2',name: "zone2"},
-    {key: '3',name:"zone3"},
-    {key: '4',name:"zone4"},
-    {key: '5',name:"zone5"},
-    {key: '6',name:"zone6"},
-    {key: '7',name:"zone7"},
+    {key: '1', name: "zone1"},
+    {key: '2', name: "zone2"},
+    {key: '3', name: "zone3"},
+    {key: '4', name: "zone4"},
+    {key: '5', name: "zone5"},
+    {key: '6', name: "zone6"},
+    {key: '7', name: "zone7"},
 ];
 
 
@@ -60,13 +61,16 @@ export class ZoneListComponent extends Component {
             return (
                 <View style={styles.container}>
                     <View style={styles.titleContainer}>
-                        <Text style={{fontSize:20,color:"white"}}>{this.props.name}</Text>
+                        <Text style={{fontSize: 20, color: "white"}}>{this.props.name}</Text>
+                        <TouchableOpacity onPress={()=>Actions.AreaScreen()}>
+                            <Text style={{fontSize: 18, color: "white"}}>Details</Text>
+                        </TouchableOpacity>
                     </View>
                     <FlatList
                         horizontal={true}
                         data={this.state.dataSource}
                         renderItem={this._rowRender}
-                        style={{ backgroundColor: "#f2f2f2"}}
+                        style={{backgroundColor: "#f2f2f2"}}
 
                     />
                 </View>
@@ -75,12 +79,12 @@ export class ZoneListComponent extends Component {
     }
 
     _rowRender(rowData) {
-        return<PlantComponent
-                name={rowData.title}
-                category={rowData.category}
-                place={rowData.place}
-                date={rowData.date}
-            />;
+        return <PlantComponent
+            name={rowData.title}
+            category={rowData.category}
+            place={rowData.place}
+            date={rowData.date}
+        />;
     }
 }
 
@@ -89,12 +93,12 @@ const styles = StyleSheet.create({
         flex: 1,
         //backgroundColor: "#2f862f",
         marginVertical: 5,
-       // borderWidth: 1,
-       // borderColor: "#1b4a19",
-        height:300,
+        // borderWidth: 1,
+        // borderColor: "#1b4a19",
+        height: 300,
         justifyContent: 'center',
     },
-    titleContainer:{
+    titleContainer: {
         padding: 10,
         backgroundColor: "#406442",
     }

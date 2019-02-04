@@ -68,3 +68,5 @@ npm-debug.*
 
 # mac
 .nosync
+
+\.idea/
