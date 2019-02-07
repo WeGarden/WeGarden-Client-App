@@ -13,6 +13,7 @@ import OneZoneScreen from "./js/components/OneZoneScreen";
 import CreateAreaScreen from "./js/components/CreateAreaScreen";
 import OnePlantComponent from "./js/components/OneZoneScreen/OnePlantComponent";
 import OnePlantScreen from "./js/components/OnePlant";
+import NewObservation from "./js/components/Process/NewObservation";
 
 export default class App extends Component {
 
@@ -76,6 +77,7 @@ export default class App extends Component {
                     <Scene key={"OnePlantScreen"} hideNavBar={false} navigationBarStyle={{backgroundColor: "green"}}
                            titleStyle={{color: "white"}} component={OnePlantScreen}/>
                     <Scene key={"CreateAreaScreen"} component={CreateAreaScreen}/>
+                    <Scene key={"CreateObservationScreen"} component={NewObservation}/>
                 </Scene>
             </Tabs>
         </Router>

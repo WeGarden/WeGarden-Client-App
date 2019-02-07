@@ -66,7 +66,7 @@ export default class OnePlantScreen extends React.Component {
                              moveOnMarkerPress={false}
                     />
                     <View style={{flexDirection: "row", justifyContent: "space-evenly"}}>
-                        <TouchableOpacity style={{flex: 1, alignItems: "center", justifyContent: "center", height: 50}}>
+                        <TouchableOpacity onPress={()=>Actions.CreateObservationScreen()} style={{flex: 1, alignItems: "center", justifyContent: "center", height: 50}}>
                             <Ionicons name="ios-hair-cross"/>
                         <Text style={{color:"green"}}>Observations</Text></TouchableOpacity>
 
