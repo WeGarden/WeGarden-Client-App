@@ -74,7 +74,7 @@ export default class App extends Component {
 
                     <Scene key={"AreaScreen"} hideNavBar={false} navigationBarStyle={{backgroundColor: "#1c4c00"}}
                            titleStyle={{color: "white"}} component={OneZoneScreen}/>
-                    <Scene key={"OnePlantScreen"} title={"Plant"} hideNavBar={false} navigationBarStyle={{backgroundColor: "green"}}
+                    <Scene key={"OnePlantScreen"} hideNavBar={false} navigationBarStyle={{backgroundColor: "green"}}
                            titleStyle={{color: "white"}} component={OnePlantScreen}/>
                     <Scene key={"CreateAreaScreen"} component={CreateAreaScreen}/>
                     <Scene key={"CreateObservationScreen"} component={NewObservation}/>

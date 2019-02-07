@@ -42,7 +42,7 @@ export default class OnePlantScreen extends React.Component {
     }
 
     componentDidMount() {
-        //this.props.navigation.setParams({title: "haha"});
+        this.props.navigation.setParams({title: "haha"});
     }
 
     _pressAdd() {
@@ -66,13 +66,39 @@ export default class OnePlantScreen extends React.Component {
                              moveOnMarkerPress={false}
                     />
                     <View style={{flexDirection: "row", justifyContent: "space-evenly"}}>
-                        <TouchableOpacity style={{flex: 1, alignItems: "center", justifyContent: "center", height: 50}}>
+                        <TouchableOpacity onPress={()=>Actions.CreateObservationScreen()} style={{flex: 1, alignItems: "center", justifyContent: "center", height: 50}}>
+                            <Ionicons name="ios-hair-cross"/>
                         <Text style={{color:"green"}}>Observations</Text></TouchableOpacity>
+
                         <TouchableOpacity style={{flex: 1, alignItems: "center", justifyContent: "center", height: 50}}><Text style={{color:"green"}}>Actions</Text></TouchableOpacity>
                     </View>
                 </View>
                 <View>
                     <Text style={{fontWeight: "bold", fontSize:1}}>Pictures</Text>
+                </View>
+                <View
+                    style={{flex:1}}
+                >
+                <Scene
+                    hideNavBar={false}
+                    title={"Gardens"}
+                    
+                    tabs={true} legacy={true} swipeEnabled={true}>
+                    <Scene key="gardensList"
+                           component={ListGarden}
+                           title={"Gardens"}
+                           hideNavBar={true}
+                           initial
+                    />
+                    <Scene key="gardensListMap"
+                           icon={this.tabIcon}
+                           iconName={"map"}
+                           component={MapListGarden}
+                           title={"Gardens"}
+                           hideNavBar={true}
+                    />
+
+                </Scene>
                 </View>
                 <FlatList
                     horizontal={true}
