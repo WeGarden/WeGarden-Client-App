@@ -1,5 +1,6 @@
 import React from 'react';
-import {ListView, StyleSheet, Image, Text, View} from 'react-native';
+import {TouchableOpacity, StyleSheet, Image, Text, View} from 'react-native';
+import {Actions} from "react-native-router-flux";
 
 export default class OnePlantComponent extends React.Component {
     constructor() {
@@ -10,8 +11,8 @@ export default class OnePlantComponent extends React.Component {
 
 
     render() {
-        return <View {...this.props} style={{...this.props.style,...styles.component}}>
-            <View style={{flex:1}}>
+        return <View {...this.props} style={{...styles.component}}>
+            <TouchableOpacity onPress={()=>Actions.OnePlantScreen({plantId:this.props.plantId})} style={{flex:1}}>
                 <Image
                     style={{width: 150, height: 150}}
                     source={{uri: 'https://3c1703fe8d.site.internapcdn.net/newman/gfx/news/hires/2016/howpartsofap.jpg'}}
@@ -20,7 +21,7 @@ export default class OnePlantComponent extends React.Component {
                     <Text style={{flex: 1, justifyContent: "center"}}>{this.props.title || "Plant X"}</Text>
 
                 </View>
-            </View>
+            </TouchableOpacity>
         </View>
     }
 }
