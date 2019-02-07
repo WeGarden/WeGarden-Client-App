@@ -11,6 +11,8 @@ import DisplayGarden from "./js/components/DisplayGarden";
 import {Ionicons} from "@expo/vector-icons";
 import OneZoneScreen from "./js/components/OneZoneScreen";
 import CreateAreaScreen from "./js/components/CreateAreaScreen";
+import OnePlantComponent from "./js/components/OneZoneScreen/OnePlantComponent";
+import OnePlantScreen from "./js/components/OnePlant";
 
 export default class App extends Component {
 
@@ -69,9 +71,11 @@ export default class App extends Component {
                            hideNavBar={false}
                     />
 
-                        <Scene key={"AreaScreen"} hideNavBar={false} navigationBarStyle={{backgroundColor: "#1c4c00"}}
-                               titleStyle={{color: "white"}} component={OneZoneScreen}/>
-                        <Scene key={"CreateAreaScreen"} component={CreateAreaScreen}/>
+                    <Scene key={"AreaScreen"} hideNavBar={false} navigationBarStyle={{backgroundColor: "#1c4c00"}}
+                           titleStyle={{color: "white"}} component={OneZoneScreen}/>
+                    <Scene key={"OnePlantScreen"} hideNavBar={false} navigationBarStyle={{backgroundColor: "green"}}
+                           titleStyle={{color: "white"}} component={OnePlantScreen}/>
+                    <Scene key={"CreateAreaScreen"} component={CreateAreaScreen}/>
                 </Scene>
             </Tabs>
         </Router>

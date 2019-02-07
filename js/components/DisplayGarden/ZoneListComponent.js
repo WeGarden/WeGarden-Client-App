@@ -3,6 +3,7 @@ import {TouchableOpacity, StyleSheet, View, Text, ListView, FlatList} from "reac
 import PlantComponent from "./PlantComponent";
 import React from "react";
 import {Actions} from "react-native-router-flux";
+import OnePlantComponent from "../OneZoneScreen/OnePlantComponent";
 
 const zones = [
     {key: '1', name: "zone1"},
@@ -79,11 +80,12 @@ export class ZoneListComponent extends Component {
     }
 
     _rowRender(rowData) {
-        return <PlantComponent
+        return <OnePlantComponent
             name={rowData.title}
             category={rowData.category}
             place={rowData.place}
             date={rowData.date}
+            style={{margin:10,}}
         />;
     }
 }
