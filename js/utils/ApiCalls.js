@@ -1,4 +1,4 @@
-const API_SERVER_URL = "http://wegardenapi.azurewebsites.net:80";
+const API_SERVER_URL = "http://sequel-wegarden.lille.inria.fr";
 const LOGIN_PATH = "/api/auth/signin";
 const SIGNUP_PATH = "/api/auth/signup";
 
@@ -9,7 +9,6 @@ export default class ApiCalls {
     static authentificateUser (username, password, abortSignal, callback200, callback401,callbackOtherError) {
         return fetch(API_SERVER_URL + LOGIN_PATH, {
             method: 'post',
-            signal: abortSignal,
             headers: {
                 Accept: 'application/json',
                 'Content-Type': 'application/json',
@@ -64,7 +63,7 @@ export default class ApiCalls {
                         }else {
                             callback400(resJson);
                         }
-                    }else if(res.status === 200){
+                    }else if(res.status === 200 || res.status === 201){
                         callback200(resJson);
 
                     }else{

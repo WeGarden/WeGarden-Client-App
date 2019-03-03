@@ -9,7 +9,7 @@ import SignupSection from './SignupSection';
 import Api from '../../../utils/ApiCalls';
 import {KeyboardAvoidingView, TouchableOpacity} from "react-native";
 import {Keyboard} from 'react-native';
-import {Actions} from "react-native-router-flux/index";
+import {Actions} from "react-native-router-flux";
 import {AbortController} from "abort-controller";
 
 
@@ -93,7 +93,7 @@ export default class LoginScreen extends Component {
         //login
         alert(res.accessToken);
         AsyncStorage.setItem("userToken",res.accessToken);
-        Actions.signinScreen() // TODO change it to home page
+        Actions.pop({refresh:{}}) // TODO change it to home page
     }
 
 

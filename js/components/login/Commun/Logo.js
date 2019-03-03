@@ -9,10 +9,10 @@ export default class Logo extends Component {
   render() {
       return (
       <View style={styles.globalContainer}>
-        <KeyboardAvoidingView behavior={'height'}>
+        <View style={{alignItems: "center", padding:10, borderWidth:3, borderColor:"green", borderRadius:30, backgroundColor: "white"}}>
         <Image source={logoImg} style={styles.image} />
-        </KeyboardAvoidingView>
         <Text style={styles.text}>{APP_TITLE}</Text>
+        </View>
       </View>
     );
   }
@@ -30,9 +30,8 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize:50,
-    color: 'white',
+    color: 'green',
     fontWeight: 'bold',
-    backgroundColor: 'green',
     marginTop: 10,
       padding: 10,
       borderRadius:100

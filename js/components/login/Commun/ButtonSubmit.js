@@ -37,7 +37,7 @@ export default class ButtonSubmit extends Component {
     }
 
     stopLoading(){
-        this.props.handleStopSubmit();
+        //this.props.handleStopSubmit();
         this.setState({isLoading:false});
         Animated.timing(this.buttonAnimated, {
             toValue: 0,

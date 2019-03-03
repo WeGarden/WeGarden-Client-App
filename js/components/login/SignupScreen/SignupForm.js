@@ -21,9 +21,11 @@ export default class Form extends Component {
     render() {
         return (
             <View style={styles.globalContainer}>
+                <View style={{padding:10}}>
                 <Text>
-                    Complete
+                    Complete the following fields and submit
                 </Text>
+                </View>
                 <UserInput
                     source={usernameImg}
                     placeholder="Username"
@@ -49,6 +51,7 @@ export default class Form extends Component {
                     autoCorrect={false}
                     handler={this.props.handlePassword}
                 />
+
                 <UserInput
                     source={passwordImg}
                     secureTextEntry={true}

@@ -1,15 +1,14 @@
 import React, {Component,} from 'react';
 import Logo from '../Commun/Logo';
 import Wallpaper from '../LoginScreen/Wallpaper';
-import {AsyncStorage, StyleSheet, Text, View, SafeAreaView, StatusBar} from "react-native";
+import {Dimensions,AsyncStorage, StyleSheet, Text, View, SafeAreaView, StatusBar} from "react-native";
 import ButtonSubmit from '../Commun/ButtonSubmit';
 import Api from '../../../utils/ApiCalls';
 import {KeyboardAvoidingView, TouchableOpacity} from "react-native";
 import {Keyboard} from 'react-native';
-import {Actions} from "react-native-router-flux/index";
+import {Actions} from "react-native-router-flux";
 import SignupForm from "./SignupForm";
-import Dimensions from "Dimensions";
-
+import { Ionicons } from '@expo/vector-icons';
 
 const MIN_PASS_LENGTH = 6;
 export default class SignupScreen extends Component {
@@ -101,7 +100,7 @@ export default class SignupScreen extends Component {
 
 
     static checkPasswordLength(pass) {
-        return pass.length >= MIN_PASS_LENGTH;
+        return pass.length < MIN_PASS_LENGTH;
     }
 
     static checkPasswordConfirm(pass, passConfirm) {
@@ -136,7 +135,7 @@ export default class SignupScreen extends Component {
         //login
         alert(res.accessToken);
         AsyncStorage.setItem("userToken", res.accessToken);
-        //Actions.signinScreen() // TODO change it to home page
+        Actions.popTo("root") // TODO change it to home page
     }
 
 
@@ -167,17 +166,13 @@ export default class SignupScreen extends Component {
 
         return (
             <SafeAreaView>
-
                 <TouchableOpacity activeOpacity={1} onPress={Keyboard.dismiss}>
                     <View style={styles.titleContainer}>
-                        <Text>
+                        <Text style={{fontSize:20}}>
                             Signup
                         </Text>
                     </View>
-                    <StatusBar
-                        backgroundColor="blue"
-                        barStyle="light-content"
-                    />
+
                     <View style={styles.globalContainer}>
                         <KeyboardAvoidingView
                             behavior='padding'
@@ -185,7 +180,7 @@ export default class SignupScreen extends Component {
                         >
                             {/*<Text>*/}
                             {/*Signup*/}
-                            {/*</Text>*/}s
+                            {/*</Text>*/}
                             <SignupForm handleEmail={this.handleEmail}
                                         handlePassword={this.handlePassword}
                                         handleConfirmPassword={this.handleConfirmPassword}
@@ -196,6 +191,8 @@ export default class SignupScreen extends Component {
                         </KeyboardAvoidingView>
                     </View>
                 </TouchableOpacity>
+
+                <Ionicons onPress={()=>Actions.pop()} name={"ios-close"} size={60} style={{position:"absolute", left: 10,top: 10}}/>
             </SafeAreaView>
         );
     }

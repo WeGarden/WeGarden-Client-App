@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import Dimensions from 'Dimensions';
-import {StyleSheet, View, Text, Animated, Easing} from 'react-native';
-import {Actions} from "react-native-router-flux/index";
+
+import {Dimensions,StyleSheet, View, Text, Animated, Easing} from 'react-native';
+import {Actions} from "react-native-router-flux";
 
 export default class SignupSection extends Component {
 
