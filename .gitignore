@@ -16,18 +16,20 @@ lib-cov
 
 # Coverage directory used by tools like istanbul
 coverage
-
-# nyc test coverage
-.nyc_output
-
-# Grunt intermediate storage (http://gruntjs.com/creating-plugins#storing-task-files)
-.grunt
-
+on submit button pressed f
+on submit button pressed f
+on submit button pressed f
+on submit button pressed f
+on submit button pressed f//gruntjs.com/creating-plugins#storing-task-files)
+on submit button pressed f
+on submit button pressed f
 # Bower dependency directory (https://bower.io/)
 bower_components
 
 # node-waf configuration
 .lock-wscript
+
+package-lock.json
 
 # Compiled binary addons (https://nodejs.org/api/addons.html)
 build/Release
@@ -66,9 +68,6 @@ typings/
 .expo/*
 npm-debug.*
 
-# mac
-.nosync
-
-.idea/*
-
 \.idea/
+
+\.nosync

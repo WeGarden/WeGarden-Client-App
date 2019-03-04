@@ -1,7 +1,7 @@
 {
-  "name": "empty-project-template",
+  "name": "WeGarden-app",
   "main": "node_modules/expo/AppEntry.js",
-  "private": true,
+  "private": false,
   "scripts": {
     "start": "expo start",
     "android": "expo start --android",
@@ -9,6 +9,7 @@
     "eject": "expo eject"
   },
   "dependencies": {
+    "abort-controller": "^1.0.2",
     "expo": "^32.0.0",
     "react": "16.5.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-32.0.0.tar.gz",
