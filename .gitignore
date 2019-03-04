@@ -65,3 +65,7 @@ typings/
 #expo
 .expo/*
 npm-debug.*
+
+\.idea/
+
+\.nosync
