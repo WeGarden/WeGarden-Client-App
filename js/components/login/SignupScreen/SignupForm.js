@@ -22,9 +22,9 @@ export default class Form extends Component {
         return (
             <View style={styles.globalContainer}>
                 <View style={{padding:10}}>
-                <Text>
-                    Complete the following fields and submit
-                </Text>
+                    <Text>
+                        Please complete the following fields and submit your registration
+                    </Text>
                 </View>
                 <UserInput
                     source={usernameImg}
@@ -79,7 +79,7 @@ Form.propTypes = {
 const styles = StyleSheet.create({
     globalContainer: {
         //flex: 1,
-        height: 200,
+        height: 240,
         alignItems: 'center'
     },
 });
