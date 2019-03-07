@@ -4,6 +4,7 @@ import OnePlantComponent from "./OnePlantComponent";
 import {Actions} from "react-native-router-flux";
 import {Ionicons} from '@expo/vector-icons';
 import {MapView} from "expo";
+import ApiCalls from "../../utils/ApiCalls";
 
 
 const HEADER_MAX_HEIGHT = 200;
@@ -12,29 +13,65 @@ const HEADER_SCROLL_DISTANCE = HEADER_MAX_HEIGHT - HEADER_MIN_HEIGHT;
 
 
 export default class OneZoneScreen extends React.Component {
-    constructor(props) {
+    constructor() {
         super();
         this.state = this.getInitialState();
 
+        this._onMapLoad = this._onMapLoad.bind(this);
+
+        this._searchOK = this._searchOK.bind(this);
+        this._errFetching = this._errFetching.bind(this);
+        this._pressAdd = this._pressAdd.bind(this);
+        this._getRenderRow = this._getRenderRow.bind(this);
 
     }
 
-
     getInitialState() {
-        var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-        var data = Array.apply(null, {length: 20}).map(Number.call, Number);
+
         return {
-            dataSource: ds.cloneWithRows(data),
-            data: data
+
+            isLoading:true
         };
     }
 
+
+    _searchOK(data) {
+        this.setState({
+            isLoading: false,
+            data: data,
+        })
+    }
+
+
     componentDidMount() {
-        this.props.navigation.setParams({title: "haha"});
+        this.props.navigation.setParams({title: this.props.area.name});
+        this.getData();
+    }
+
+    async getData() {
+        await ApiCalls.getPlantList(this.props.area.id,this._searchOK,this._userOut,this._errFetching);
+    }
+
+    _userOut() {
+        alert("Please connect to your account");
+        Actions.loginRoot({type:"reset"});
+    }
+
+
+    _errFetching() {
+        alert("Erreur de chargement");
+        this.setState({
+            isLoading: false,
+        });
     }
 
     _pressAdd() {
-        Actions.CreateAreaScreen();
+        Actions.CreatePlantScreen({area:this.props.area});
+    }
+
+    _onMapLoad(){
+        let coordinates = this.props.area.coordList;
+        this.refs.map.fitToCoordinates(coordinates) //{coordinates:this.props.path});
     }
 
     render() {
@@ -53,7 +90,27 @@ export default class OneZoneScreen extends React.Component {
                              toolbarEnabled={false}
                              loadingEnabled={true}
                              moveOnMarkerPress={false}
-                    />
+                        ref={"map"}
+                        provider={"google"}
+                        mapPadding={{
+                            top: 10,
+                            right: 10,
+                            bottom: 10,
+                            left: 10
+                        }}
+                        onLayout={this._onMapLoad}
+                    >
+                        <MapView.Polygon
+                            fillColor={"rgba(0,0,200,0.3)"}
+                            coordinates={this.props.area.coordList}
+                        />
+                        {this.state.data!=null?this.state.data.map((plant,index)=><MapView.Marker
+                                pinColor={"rgba("+(1*index+10)%255+","+((1+index)**index)%255+","+200+",0.3)"}
+                                coordinate={plant.coord}
+                            />
+
+                        ):null}
+                    </MapView>
                     <View style={{flexDirection: "row", justifyContent: "space-evenly"}}>
                         <TouchableOpacity style={{flex: 1, alignItems: "center", justifyContent: "center", height: 50}}><Text>Observations</Text></TouchableOpacity>
                         <View style={{backgroundColor: "black", width: 1}}/>
@@ -82,17 +139,15 @@ export default class OneZoneScreen extends React.Component {
                     alignItems: "center",
                     justifyContent: "center",
                 }}>
-                    <Ionicons style={{flex: 1}} onPress={this._pressAdd} color={"black"} name={"ios-add-circle"}
-                              size={70}/>
+                    <Ionicons style={{flex: 1}} onPress={this._pressAdd} color={"black"} name={"ios-add-circle"} size={70}/>
                 </View>
-
             </View>
         );
 
     }
 
     _getRenderRow(rowData) {
-        return <OnePlantComponent style={styles.item}/>;
+        return <OnePlantComponent area={this.state.data} data={rowData.item} style={styles.item}/>;
     }
 }
 

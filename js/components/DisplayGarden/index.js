@@ -4,20 +4,13 @@ import {ZoneListComponent} from './ZoneListComponent';
 import React from "react";
 import HeaderComponent from "./HeaderComponent";
 import {MapView} from "expo";
+import ApiCalls from "../../utils/ApiCalls";
+import {Actions} from "react-native-router-flux";
+import {Ionicons} from "@expo/vector-icons";
 
 
-const HEADER_EXPANDED_HEIGHT = 300;
+const HEADER_EXPANDED_HEIGHT = 250;
 const HEADER_COLLAPSED_HEIGHT = 50;
-
-const zones = [
-    {name: "zone1"},
-    {name: "zone2"},
-    {name: "zone3"},
-    {name: "zone4"},
-    {name: "zone5"},
-    {name: "zone6"},
-    {name: "zone7"},
-];
 
 
 export default class DisplayGarden extends Component {
@@ -31,65 +24,64 @@ export default class DisplayGarden extends Component {
         };
 
         this._onRefresh = this._onRefresh.bind(this);
-
+        this._errFetching = this._errFetching.bind(this);
+        this._searchOK = this._searchOK.bind(this);
+        this.getData = this.getData.bind(this);
+        this._pressAdd = this._pressAdd.bind(this);
+        this._onMapLoad = this._onMapLoad.bind(this);
 
     }
 
-    componentDidMount() {
-        let ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+    _searchOK(data) {
         this.setState({
             isLoading: false,
-            dataSource: ds.cloneWithRows(zones),
+            data: data,
+            refreshing: false,
         })
-
-        // return fetch('http://172.18.13.119:3000/activity/')
-        //      .then((response) => response.json())
-        //      .then((responseJson) => {
-        //          let ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-        //          this.setState({
-        //              isLoading: false,
-        //              dataSource: ds.cloneWithRows(responseJson.organizers),
-        //          }, function() {
-        //              // do something with new state
-        //          });
-        //      })
-        //      .catch((error) => {
-        //          console.error(error);
-        //      });
     }
 
+
+    componentDidMount() {
+        this.props.navigation.setParams({title: this.props.garden.name});
+
+        this.getData();
+    }
+
+    async getData() {
+        await ApiCalls.getAreaList(this.props.garden.id,this._searchOK,this._userOut,this._errFetching);
+    }
+
+    _userOut() {
+        alert("Please connect to your account");
+        Actions.loginRoot();
+    }
+
+
+    _errFetching() {
+        alert("Erreur de chargement");
+        this.setState({
+            isLoading: false,
+        });
+    }
 
     _onRefresh() {
         this.setState({
             refreshing: true
         });
 
-        this._refreshData();
-
-    }
-
-    _refreshData() {
-        let ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-
-
-        this.setState({
-            refreshing: false,
-            dataSource:
-                ds.cloneWithRows([
-                    {name: "zone2"},
-                    {name: "zone4"},
-                    {name: "zone5"},
-                    {name: "zone6"},
-                    {name: "zone7"},
-                ]),
-        })
+        this.getData();
     }
 
     _isEmpty() {
-        return !this.state.dataSource || this.state.dataSource._cachedRowCount === 0;
+        return !this.state.data || this.state.data.length === 0;
+    }
+    _onMapLoad(){
+        let coordinates = this.props.garden.coordList;
+        this.refs.map.fitToCoordinates(coordinates) //{coordinates:this.props.path});
     }
 
     render() {
+        let ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
         if (this.state.isLoading) {
             return (
                 <View style={{flex: 1, justifyContent: "center", alignItems: "center"}}>
@@ -109,19 +101,30 @@ export default class DisplayGarden extends Component {
                     <View style={styles.container}>
                         <Animated.View style={{height: headerHeight,}}>
                             <View style={{flex: 1}}>
-                                <MapView style={styles.bar}
-                                         showsMyLocationButton={false}
-                                         showsPointsOfInterest={false}
-                                         showsTraffic={false}
-                                         zoomEnabled={false}
-                                         minZoomLevel={10}
-                                         zoomControlEnabled={false}
-                                         scrollEnabled={false}
-                                         rotateEnabled={false}
-                                         toolbarEnabled={false}
-                                         loadingEnabled={true}
-                                         moveOnMarkerPress={false}
-                                />
+                                <MapView
+                                    ref={"map"}
+                                    provider={"google"}
+                                    style={{height:200}}
+                                    mapPadding={{
+                                        top: 10,
+                                        right: 10,
+                                        bottom: 10,
+                                        left: 10
+                                    }}
+                                    onLayout={this._onMapLoad}
+                                    mapType={this.state.isSatellite ? "satellite" : "standard"}
+                                >
+                                    <MapView.Polygon
+                                        fillColor={"rgba(0,0,200,0.3)"}
+                                        coordinates={this.props.garden.coordList}
+                                    />
+                                    {this.state.data!=null?this.state.data.map((area,index)=><MapView.Polygon
+                                            fillColor={"rgba("+(1*index+10)%255+","+((1+index)**index)%255+","+200+",0.3)"}
+                                            coordinates={area.coordList}
+                                        />
+
+                                    ):null}
+                                </MapView>
                                 <View style={{flexDirection: "row", justifyContent: "space-evenly"}}>
                                     <TouchableOpacity style={{
                                         flex: 1,
@@ -140,6 +143,17 @@ export default class DisplayGarden extends Component {
                                         height: 50
                                     }}>
                                         <Text>Actions</Text>
+                                    </TouchableOpacity>
+                                    <View style={{backgroundColor: "black", width: 1}}/>
+                                    <TouchableOpacity style={{
+                                        flex: 1,
+                                        alignItems: "center",
+                                        justifyContent: "center",
+                                        height: 50
+                                    }}
+                                                      onPress={this._pressAdd}
+                                    >
+                                        <Text>Add area</Text>
                                     </TouchableOpacity>
                                 </View>
                             </View>
@@ -160,9 +174,25 @@ export default class DisplayGarden extends Component {
                                     refreshing={this.state.refreshing}
                                     onRefresh={this._onRefresh}
                                 />}
-                            dataSource={this.state.dataSource}
+                            dataSource={ds.cloneWithRows(this.state.data)}
                             renderRow={this._renderItem}
                         />
+                        <View style={{
+                            position: "absolute",
+                            borderRadius: 99,
+                            backgroundColor: "white",
+                            borderColor: "white",
+                            borderWidth: 1,
+                            width: 70,
+                            height: 70,
+                            bottom: 50,
+                            right: 20,
+                            alignItems: "center",
+                            justifyContent: "center",
+                        }}>
+                            <Ionicons style={{flex: 1}} onPress={this._pressAdd} color={"black"} name={"ios-add-circle"}
+                                      size={70}/>
+                        </View>
                     </View>
                 );
             } else {
@@ -173,18 +203,35 @@ export default class DisplayGarden extends Component {
                                      onRefresh={this._onRefresh}
                                  />}
                 >
-                    <Text>No zone found</Text>
+                    <Text>No area found</Text>
+                    <View style={{
+                        position: "absolute",
+                        borderRadius: 99,
+                        backgroundColor: "white",
+                        borderColor: "white",
+                        borderWidth: 1,
+                        width: 70,
+                        height: 70,
+                        bottom: 50,
+                        right: 20,
+                        alignItems: "center",
+                        justifyContent: "center",
+                    }}>
+                        <Ionicons style={{flex: 1}} onPress={this._pressAdd} color={"black"} name={"ios-add-circle"}
+                                  size={70}/>
+                    </View>
                 </View>
             }
         }
     }
 
+    _pressAdd() {
+        Actions.CreateAreaScreen({garden:this.props.garden});
+    }
+
     _renderItem(rowData) {
         return <ZoneListComponent
-            name={rowData.name}
-            category={rowData.category}
-            place={rowData.place}
-            date={rowData.date}
+            data={rowData}
         />;
     }
 }
@@ -207,7 +254,7 @@ const styles = StyleSheet.create({
         //overflow: 'hidden',
     },
     bar: {
-        flex: 1,
+        height:200,
         alignItems: 'center',
         justifyContent: 'center',
     },

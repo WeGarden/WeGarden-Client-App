@@ -10,7 +10,7 @@ export default class PlantComponent extends Component {
         return <View style={styles.container}>
             <Image
                 style={{width: 200, height: 200}}
-                source={{uri: 'https://3c1703fe8d.site.internapcdn.net/newman/gfx/news/hires/2016/howpartsofap.jpg'}}
+                source={{uri: 'data:image/jpeg;base64,' + this.props.title}}
             />
             <View style={{flex: 1, backgroundColor: "#fffef6", padding: 5}}>
                 <Text style={{flex: 1, justifyContent:"center"}}>{this.props.title || "Plant X"}</Text>

@@ -11,7 +11,8 @@ export default class ImagePickerComponent extends React.Component {
         let { image } = this.state;
 
         return (
-            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+            <View style={{ flex: 1, flexDirection:"row",alignItems: 'center', justifyContent: 'center' }}>
+                <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
                 <Text>Pick an image</Text>
                 <Button
                     title="from camera roll"
@@ -20,8 +21,10 @@ export default class ImagePickerComponent extends React.Component {
                     title="from Camera"
                     onPress={this._takePicture}
                 />
+                </View>
+
                 {image &&
-                <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
+                <Image source={{ uri: 'data:image/jpeg;base64,' +image }} style={{ width: 200, height: 200 }} />}
             </View>
         );
     }
@@ -38,12 +41,12 @@ export default class ImagePickerComponent extends React.Component {
         let result = await ImagePicker.launchImageLibraryAsync({
             allowsEditing: true,
             aspect: [4, 3],
+            base64: true
         });
 
-        console.log(result);
-
         if (!result.cancelled) {
-            this.setState({ image: result.uri });
+            this.setState({ image: result.base64 });
+            this.props.setImage(result.base64);
         }
     };
 
@@ -56,7 +59,8 @@ export default class ImagePickerComponent extends React.Component {
         });
 
         if (!result.cancelled) {
-            this.setState({ image: result.uri,});
+            this.setState({ image: result.base64,});
+            this.props.setImage(result.base64);
         }
     };
 }

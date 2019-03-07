@@ -135,7 +135,8 @@ export default class SignupScreen extends Component {
         //login
         alert(res.accessToken);
         AsyncStorage.setItem("userToken", res.accessToken);
-        Actions.popTo("root") // TODO change it to home page
+        AsyncStorage.setItem("userId", res.userId);
+        Actions.reset("rootTab",{}) // TODO change it to home page
     }
 
 

@@ -91,9 +91,9 @@ export default class LoginScreen extends Component {
      */
     static loginSuccess(res) {
         //login
-        alert(res.accessToken);
         AsyncStorage.setItem("userToken",res.accessToken);
-        Actions.pop({refresh:{}}) // TODO change it to home page
+        AsyncStorage.setItem("userId",res.userId);
+        Actions.reset("rootTab",{}) // TODO change it to home page
     }
 
 

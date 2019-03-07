@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {
     Alert,
-    StyleSheet, Text, KeyboardAvoidingView, FormLabel, TextInput
+    StyleSheet, Text, KeyboardAvoidingView, TextInput
     , CheckBox, Button, Picker, View, TouchableOpacity, PickerIOS, SafeAreaView
 } from 'react-native';
 import {Actions} from "react-native-router-flux";
@@ -9,9 +9,10 @@ import UserInput from "../Commun/UserInput";
 import {Ionicons} from "@expo/vector-icons";
 import {Location} from 'expo';
 import ButtonSelect from "../Commun/ButtonSelect";
+import ImagePickerComponent from "../Commun/ImagePicker";
 
 
-export default class CreateGarden extends Component {
+export default class CreatePlantScreen extends Component {
 
     _getLocationAsync = async () => {
         let {status} = await Expo.Permissions.askAsync(Expo.Permissions.LOCATION);
@@ -24,28 +25,31 @@ export default class CreateGarden extends Component {
 
         let location = await Location.getCurrentPositionAsync({});
         this.setState({location});
+
     };
+    _setImage(image){
+        this.setState({image64:image})
+    }
 
     constructor(props) {
         super(props);
 
 
         this.state = {
-            name: props.name,
-            place: '',
-            time: props.time,
-            private: false,
-            gardenType: 1,
-            location: props.location,
-            textLocation: ''
+            plantName: '',
+            species: '',
+            family: '',
+            coords: {},
+            image64:null,
         };
         this.handlePress = this.handlePress.bind(this);
         this.onFinish = this.onFinish.bind(this);
+        this._setImage = this._setImage.bind(this);
     }
 
     onCancelPress() {
         Alert.alert(
-            'Create new garden',
+            'Create new plant',
             'Do you really want to close?',
             [
                 {
@@ -61,34 +65,22 @@ export default class CreateGarden extends Component {
 
     handlePress() {
         console.log(JSON.stringify(this.state));
-        this.onActivityCreated();
+        Actions.createPlantScreen2({
+            onFinish: this.onFinish,
+            family: this.state.family,
+            species:this.state.species,
+            plantName:this.state.plantName,
+            area:this.props.area,
+            image:this.state.image64
+        });
     }
 
     onFinish() {
         this.props.onFinish();
     }
-
-    async onActivityCreated() {
-        await this._getLocationAsync();
-        Actions.createGardenScreen2({
-            onFinish: this.onFinish,
-            description: this.state.description,
-            gardenType:this.state.gardenType,
-            gardenName:this.state.gardenName,
-            isPrivate:this.state.private,
-            location: this.state.location
-        });
-        //  Actions.pop();
-    }
-
     on401() {
         alert("you must be logged in");
         Actions.loginRoot();
-    }
-
-
-    onErr() {
-        alert("Erreur");
     }
 
     async componentDidMount() {
@@ -113,7 +105,7 @@ export default class CreateGarden extends Component {
                     //<KeyboardAvoidingView style={styles.container} behavior="padding" enabled={true}>}
                 }
                 <View style={{flex:1, flexDirection:"row", alignItems:"center"}}>
-                    <Text style={styles.title}>New garden</Text>
+                    <Text style={styles.title}>New plant</Text>
                 <Ionicons style={{position: "relative", top: 0, right: 0}} color="black"
                           onPress={this.onCancelPress}
                           name={"md-close"} size={40}/>
@@ -122,12 +114,12 @@ export default class CreateGarden extends Component {
                     <UserInput
                         source={"md-text"}
                         style={styles.input}
-                        placeholder="Garden name"
+                        placeholder="Name"
                         autoCapitalize={'words'}
                         returnKeyType={'done'}
                         autoCorrect={false}
-                        handler={(gardenName) => this.setState({gardenName})}
-                        value={this.props.title}
+                        handler={(plantName) => this.setState({plantName})}
+                        value={this.props.plantName}
                     />
                 </View>
 
@@ -135,41 +127,39 @@ export default class CreateGarden extends Component {
                     <UserInput
                         source={"md-text"}
                         style={styles.input}
-                        placeholder="Description"
+                        placeholder="Specie"
                         returnKeyType={'done'}
                         autoCorrect={false}
-                        handler={(description) => this.setState({description})}
-                        value={this.props.title}
+                        handler={(specie) => this.setState({specie})}
+                        value={this.props.specie}
+                    />
+                </View>
+
+                <View style={{flex: 1, alignItems: "center"}}>
+                    <UserInput
+                        source={"md-text"}
+                        style={styles.input}
+                        placeholder="Family"
+                        returnKeyType={'done'}
+                        autoCorrect={false}
+                        handler={(family) => this.setState({family})}
+                        value={this.props.family}
                     />
                 </View>
 
                 <View style={{flex: 3, alignItems: "center"}}>
                     <View style={{
                         padding: 10,
-                        height: 200,
+                        height: 250,
                         flexDirection: "row",
                         alignItems: "center",
                         borderRadius: 20,
                         borderWidth: 1
                     }}>
-                        <Text style={{flex: 1}}>Garden type:</Text>
-                        <Picker
-                            style={{flex: 1}}
-                            selectedValue={this.state.gardenType}
-                            onValueChange={(type) => this.setState({gardenType: type})}>
-                            <Picker.Item label="Closed" value={0}/>
-                            <Picker.Item label="Opened" value={1}/>
-                            <Picker.Item label="Other" value={2}/>
-                        </Picker>
+                        <ImagePickerComponent setImage={this._setImage}/>
                     </View>
                 </View>
 
-                <View style={{flex: 1, justifyContent: "center"}}>
-                    <ButtonSelect text={"Private"} checked={this.state.private}
-                                  onPress={() => this.setState((state, props) => {
-                                      return {private: !state.private};
-                                  })}/>
-                </View>
                 <View style={{flex: 1, justifyContent: "center"}}>
                     <TouchableOpacity style={styles.bouton}
                                       onPress={this.handlePress}

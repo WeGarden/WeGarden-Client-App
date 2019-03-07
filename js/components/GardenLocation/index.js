@@ -1,65 +1,184 @@
-import React, {Component} from 'react';
+import React from 'react';
 import {
+    Dimensions,
     Alert,
-    StyleSheet, Text, KeyboardAvoidingView, FormLabel, TextInput
-    , CheckBox, Button, Picker, View, TouchableOpacity, PickerIOS, SafeAreaView
+    SafeAreaView,
+    KeyboardAvoidingView,
+    Text,
+    View,
+    TextInput,
+    TouchableOpacity
 } from 'react-native';
+import {MapView} from "expo";
+import ApiCalls from "../../utils/ApiCalls";
 import {Actions} from "react-native-router-flux";
-import UserInput from "../Commun/UserInput";
-import {Ionicons} from "@expo/vector-icons/";
-
-import ImagePickerComponent from "./ImagePicker";
-import ButtonSelect from "../Commun/ButtonSelect";
 
 
-export default class GardenLocation extends Component {
+export default class GardenLocation extends React.Component {
+
     constructor(props) {
         super(props);
-
-
         this.state = {
-            title: props.title,
-            place: '',
-            time: props.time,
-            private: false,
-            activity: 1,
-            location: props.location,
-            textLocation: ''
+            gardenName: props.gardenName,
+            polygon: [],
+            isDrawing: true,
+            isSubmitable: false,
+            address:{}
         };
-        this.handlePress = this.handlePress.bind(this);
+        this._setGardenName = this._setGardenName.bind(this);
+        this._addPointToPolygon = this._addPointToPolygon.bind(this);
+        this._popLastPoint = this._popLastPoint.bind(this);
+        this._setMapType = this._setMapType.bind(this);
+        this._isFilled = this._isFilled.bind(this);
+        this._submit = this._submit.bind(this);
+        this.onGardenCreated = this.onGardenCreated.bind(this);
+    }
+
+    async componentDidMount() {
+        if (this.props.location) {
+            let cities = await Expo.Location.reverseGeocodeAsync({
+                longitude: this.props.location.coords.longitude,
+                latitude: this.props.location.coords.latitude
+            });
+            let city = cities[0];
+            this.setState({address:city,textLocation: city.city + " - " + city.postalCode + " - " + city.isoCountryCode})
+            //alert(JSON.stringify(city))
+        }
+    }
+
+    _setMapType() {
+        this.setState((prevState) => ({isSatellite: !prevState.isSatellite}))
+    }
+
+    _setGardenName(title) {
+        this.setState({gardenName: title})
+    }
+
+    _addPointToPolygon(event) {
+        this.setState(prevState => ({polygon: [...prevState.polygon, event.coordinate]}))
+    }
+
+    _popLastPoint() {
+        if (!this.state.isDrawing)
+            this.setState({isDrawing: true});
+        else
+            this.setState(prevState => ({polygon: prevState.polygon.slice(0, -1)}))
+    }
+
+    _isFilled() {
+        return !this.state.isDrawing && this.state.gardenName && this.state.gardenName.length > 3;
     }
 
 
-    onCancelPress() {
-        Alert.alert(
-            'Create new garden',
-            'Do you really want to close?',
-            [
-                {
-                    text: 'Yes', onPress: () => {
-                        Actions.pop();
-                    }
-                },
-                {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
-            ],
-            {cancelable: false}
-        )
-    };
 
-    handlePress() {
-        console.log(JSON.stringify(this.state));
-        this.onActivityCreated();
+
+    render() {
+        return <SafeAreaView style={{flex: 1, backgroundColor:"white"}}>
+            <View style={{paddingHorizontal: 10}}>
+                <TextInput
+                    style={{height: 50, fontSize: 20}}
+                    placeholder={"Garden's name*"}
+                    onChangeText={this._setGardenName}
+                    showsScale={true}
+                    value={this.state.gardenName}
+                />
+            </View>
+
+            <View style={{flexDirection: "row", height: 50, justifyContent: "space-evenly"}}>
+                {this.state.polygon && this.state.polygon.length > 0 ?
+                    <TouchableOpacity
+                        style={{flex: 1, borderTopWidth: 1, alignItems: "center", justifyContent: "center",}}
+                        onPress={this._popLastPoint}>
+                        <Text>Get back</Text>
+                    </TouchableOpacity>
+                    : <View style={{flex: 2, justifyContent: "center"}}>
+                        <Text style={{fontSize: 18, textAlign: "center"}}>Tap on the map to draw the garden's
+                            perimeter</Text>
+                    </View>}
+                {this.state.isDrawing && this.state.polygon && this.state.polygon.length > 2 ?
+                    <TouchableOpacity style={{
+                        flex: 1,
+                        alignItems: "center",
+                        backgroundColor: "green",
+                        justifyContent: "center",
+                        borderTopWidth: 1,
+                    }}
+                                      onPress={() => this.setState({isDrawing: false})}>
+                        <Text style={{color: "white"}}>Done</Text>
+                    </TouchableOpacity>
+                    : null}
+            </View>
+            <View style={{flexDirection: "row", height: 50, justifyContent: "space-evenly"}}>
+                <TouchableOpacity style={{
+                    flex: 2,
+                    borderTopWidth: 1,
+                    borderBottomWidth: 1,
+                    alignItems: "center",
+                    justifyContent: "center",
+                }}
+                                  onPress={this._setMapType}>
+                    <Text>Change map's type</Text>
+                </TouchableOpacity>
+            </View>
+            <MapView
+                ref={"map"}
+                provider={"google"}
+                style={{flex: 1}}
+                initialRegion={{
+                    latitude: this.props.location.coords.latitude,
+                    longitude: this.props.location.coords.longitude,
+                    latitudeDelta: 0.0500,
+                    longitudeDelta: 0.0200,
+                }}
+                mapType={this.state.isSatellite ? "satellite" : "standard"}
+                onPress={(e) => this.state.isDrawing ? this._addPointToPolygon(e.nativeEvent) : null}
+            >
+
+                {this.state.polygon &&
+                this.state.polygon.length > 2 &&
+                !this.state.isDrawing ?
+                    <MapView.Polygon
+                        fillColor={"rgba(0,200,0,0.8)"}
+                        coordinates={this.state.polygon}
+                    /> : this.state.polygon.length > 1 ?
+                        <MapView.Polyline onPress={e => this._addPointToPolygon(e.nativeEvent)}
+                                          coordinates={this.state.polygon}/> : null}
+
+                {this.state.polygon.length && this.state.isDrawing > 0 ?
+                    <MapView.Marker coordinate={this.state.polygon[this.state.polygon.length - 1]}/> :
+                    null}
+            </MapView>
+
+            <KeyboardAvoidingView behavior={"position"} style={{
+                position: "absolute",
+                bottom: 0,
+                flexDirection: "row",
+                justifyContent: "space-evenly"
+            }}>
+                <TouchableOpacity disabled={!this._isFilled()} style={{
+                    flex: 2,
+                    width: Dimensions.get("screen").width,
+                    alignItems: "center",
+                    backgroundColor: this._isFilled() ? "green" : "grey",
+                    height: 50,
+                    justifyContent: "center",
+                }}
+                                  onPress={this._submit}>
+                    <Text style={{color: "white"}}>Finish</Text>
+                </TouchableOpacity>
+            </KeyboardAvoidingView>
+        </SafeAreaView>
     }
 
-    onActivityCreated() {
+
+    onGardenCreated() {
         alert("Garden created!");
-        Actions.popTo("gardensList");
-        this.props.onFinish();
+        Actions.reset("rootTab",{})
     }
 
     on401() {
         alert("you must be logged in");
-        Actions.loginRoot();
+        Actions.loginRoot({type:"reset"});
     }
 
 
@@ -67,98 +186,23 @@ export default class GardenLocation extends Component {
         alert("Erreur");
     }
 
-    async alertIfRemoteNotificationsDisabledAsync() {
-        const {Permissions} = Expo;
-        const {status} = await Expo.Permissions.getAsync(Expo.Permissions.CAMERA_ROLL);
-        if (status !== 'granted') {
-            const {status} = await Expo.Permissions.askAsync(Expo.Permissions.CAMERA_ROLL);
-        }
-    }
+    _submit() {
+            let data = {
+                coordList: this.state.polygon,
+                description: this.props.description,
+                gardenType: this.props.gardenType,
+                image: "",
+                location: {
+                    address: this.state.address.street,
+                    city: this.state.address.city,
+                    country: this.state.address.country,
+                    latitude: this.props.location.coords.latitude,
+                    longitude: this.props.location.coords.longitude
+                },
+                name: this.state.gardenName,
+                private: this.props.isPrivate,
 
-
-    async componentDidMount() {
-        this.alertIfRemoteNotificationsDisabledAsync();
-        if (this.props.location) {
-            let cities = await Expo.Location.reverseGeocodeAsync({
-                longitude: this.props.location.coords.longitude,
-                latitude: this.props.location.coords.latitude
-            });
-            let city = cities[0];
-            this.setState({textLocation: city.city + " - " + city.postalCode + " - " + city.isoCountryCode})
-            //alert(JSON.stringify(city))
-        }
-
-    }
-
-    render() {
-        return (
-            <SafeAreaView style={{flex: 1}}>
-                <KeyboardAvoidingView style={styles.container} behavior="padding" enabled={true}>
-                    <Ionicons style={{position: "absolute", top: 0, right: 10}} color="black"
-                              onPress={this.onCancelPress}
-                              name={"md-close"} size={40}/>
-                    <Text style={styles.title}>New garden</Text>
-
-                    <View style={{flex: 1, alignItems: "center"}}>
-                        <UserInput
-                            source={"md-text"}
-                            style={styles.input}
-                            placeholder="Location"
-                            autoCapitalize={'words'}
-                            returnKeyType={'done'}
-                            autoCorrect={false}
-                            handler={(name) => this.setState({name})}
-                            value={this.state.textLocation}
-                        />
-                    </View>
-
-                    <View style={{flex: 1}}>
-                        <Text style={{fontWeight: "bold", color: "green"}}>Garden plan</Text>
-                        <Text style={{color: "green"}}>Please picture or pick from your device the plan of your
-                            garden:</Text>
-                    </View>
-
-                    <View style={{flex: 3}}>
-                        <ImagePickerComponent/>
-                    </View>
-
-                    <View style={{flex: 1}}>
-                        <ButtonSelect text={"Private"} checked={this.state.private} onPress={() => this.setState((state, props) => {
-                            return {private: !state.private};
-                        })} />
-                    </View>
-                    <View style={{flex: 1, justifyContent: "center"}}>
-                        <TouchableOpacity style={styles.bouton}
-                                          onPress={this.handlePress}
-                        >
-                            <Text style={{fontSize: 25, fontWeight: "bold", color: "white"}}>Create</Text>
-                        </TouchableOpacity>
-                    </View>
-                </KeyboardAvoidingView>
-            </SafeAreaView>
-        );
+            };
+            ApiCalls.createGarden(data,this.onGardenCreated,this.on401,this.onErr);
     }
 }
-const styles = StyleSheet.create({
-    container: {
-        alignItems: "center",
-        flex: 1,
-        justifyContent: "space-between",
-        paddingHorizontal: 25,
-    },
-    input: {
-        flex: 1,
-    },
-    title: {
-        marginBottom: 20,
-        fontSize: 25,
-        textAlign: 'center'
-    },
-    bouton: {
-        backgroundColor: "green",
-        flex: 0.5,
-        justifyContent: "center",
-        paddingHorizontal: 50,
-        borderRadius: 30,
-    }
-});
