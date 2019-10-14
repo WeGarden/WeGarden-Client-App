@@ -23,9 +23,17 @@ export default class PlantComponent extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#fffef5",
-        margin: 5,
+        backgroundColor: "#ff003b",
+
         width: 200,
+        margin: 20,
+        shadowColor: '#000000',
+        shadowOffset: {
+            width: 10,
+            height: 3
+        },
+        borderRadius:10,
+        elevation: 2,
        // borderWidth: 1,
        // borderColor: "#1b4a19",
     }

@@ -64,7 +64,6 @@ export default class CreatePlantScreen extends Component {
     };
 
     handlePress() {
-        console.log(JSON.stringify(this.state));
         Actions.createPlantScreen2({
             onFinish: this.onFinish,
             family: this.state.family,
@@ -191,7 +190,7 @@ const styles = StyleSheet.create({
         textAlign: 'center'
     },
     bouton: {
-        backgroundColor: "green",
+        backgroundColor: "#00BB55",
         flex: 0.5,
         justifyContent: "center",
         paddingHorizontal: 50,

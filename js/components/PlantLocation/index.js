@@ -39,7 +39,7 @@ export default class PlantLocationScreen extends React.Component {
     }
 
     _setGardenName(title) {
-        this.setState({gardenName: title})
+        this.setState({actObsName: title})
     }
 
     _addPointToPolygon(event) {
@@ -54,7 +54,7 @@ export default class PlantLocationScreen extends React.Component {
     }
 
     _isFilled() {
-        return !this.state.isDrawing && ((this.state.gardenName && this.state.gardenName.length > 3)|| this.state.plantLocation);
+        return !this.state.isDrawing && ((this.state.actObsName && this.state.actObsName.length > 3)|| this.state.plantLocation);
     }
 
 
@@ -93,7 +93,7 @@ export default class PlantLocationScreen extends React.Component {
                     <TouchableOpacity style={{
                         flex: 1,
                         alignItems: "center",
-                        backgroundColor: "green",
+                        backgroundColor: "#00BB55",
                         justifyContent: "center",
                         borderTopWidth: 1,
                     }}
@@ -151,7 +151,7 @@ export default class PlantLocationScreen extends React.Component {
                     flex: 2,
                     width: Dimensions.get("screen").width,
                     alignItems: "center",
-                    backgroundColor: this._isFilled() ? "green" : "grey",
+                    backgroundColor: this._isFilled() ? "#00BB55" : "grey",
                     height: 50,
                     justifyContent: "center",
                 }}
@@ -164,7 +164,7 @@ export default class PlantLocationScreen extends React.Component {
 
 
     onPlantCreated() {
-        alert("Garden created!");
+        alert("Plant created!");
         Actions.pop();
         Actions.pop({refresh:{area:this.props.area}});
     }

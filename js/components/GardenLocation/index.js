@@ -19,7 +19,7 @@ export default class GardenLocation extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            gardenName: props.gardenName,
+            actObsName: props.actObsName,
             polygon: [],
             isDrawing: true,
             isSubmitable: false,
@@ -51,7 +51,7 @@ export default class GardenLocation extends React.Component {
     }
 
     _setGardenName(title) {
-        this.setState({gardenName: title})
+        this.setState({actObsName: title})
     }
 
     _addPointToPolygon(event) {
@@ -66,7 +66,7 @@ export default class GardenLocation extends React.Component {
     }
 
     _isFilled() {
-        return !this.state.isDrawing && this.state.gardenName && this.state.gardenName.length > 3;
+        return !this.state.isDrawing && this.state.actObsName && this.state.actObsName.length > 3;
     }
 
 
@@ -80,7 +80,7 @@ export default class GardenLocation extends React.Component {
                     placeholder={"Garden's name*"}
                     onChangeText={this._setGardenName}
                     showsScale={true}
-                    value={this.state.gardenName}
+                    value={this.state.actObsName}
                 />
             </View>
 
@@ -99,7 +99,7 @@ export default class GardenLocation extends React.Component {
                     <TouchableOpacity style={{
                         flex: 1,
                         alignItems: "center",
-                        backgroundColor: "green",
+                        backgroundColor: "#00BB55",
                         justifyContent: "center",
                         borderTopWidth: 1,
                     }}
@@ -159,7 +159,7 @@ export default class GardenLocation extends React.Component {
                     flex: 2,
                     width: Dimensions.get("screen").width,
                     alignItems: "center",
-                    backgroundColor: this._isFilled() ? "green" : "grey",
+                    backgroundColor: this._isFilled() ? "#00BB55" : "grey",
                     height: 50,
                     justifyContent: "center",
                 }}
@@ -199,7 +199,7 @@ export default class GardenLocation extends React.Component {
                     latitude: this.props.location.coords.latitude,
                     longitude: this.props.location.coords.longitude
                 },
-                name: this.state.gardenName,
+                name: this.state.actObsName,
                 private: this.props.isPrivate,
 
             };

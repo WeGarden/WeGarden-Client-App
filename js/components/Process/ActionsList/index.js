@@ -3,17 +3,8 @@ import {Image, ListView, SafeAreaView, Text, TouchableOpacity, View} from "react
 import {Actions} from "react-native-router-flux/";
 import React from "react";
 import {Ionicons} from '@expo/vector-icons';
+import ApiCalls from "../../../utils/ApiCalls";
 
-
-const gardens = [
-    {name:"Garden 1",type:"Opened"},
-    {name:"Garden 2",type:"Opened"},
-    {name:"Garden 3",type:"Opened"},
-    {name:"Garden 4",type:"Opened"},
-    {name:"Garden 5",type:"Opened"},
-    {name:"Garden 6",type:"Opened"},
-    {name:"Garden 7",type:"Opened"}
-]
 
 export default class ActionList extends Component {
 
@@ -28,6 +19,7 @@ export default class ActionList extends Component {
         this._errFetching = this._errFetching.bind(this);
         this._searchOK = this._searchOK.bind(this);
         this.getData = this.getData.bind(this);
+        this._userOut = this._userOut.bind(this);
 
     }
 
@@ -40,21 +32,22 @@ export default class ActionList extends Component {
 
 
     componentDidMount() {
+        this.props.navigation.setParams({title: (this.props.area?this.props.area.name:this.props.plant?this.props.plant.name:null)+"'s actions"});
         this.getData();
     }
 
-    getData() {
-        gardens.push({name:"haha", type:"blooo"});
-        let ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-        this.setState({
-            isLoading: false,
-            dataSource: gardens,
-        })
+    async getData() {
+        if (this.props.plant)
+            await ApiCalls.getPlantActionList(this.props.plant.id, this._searchOK, this._userOut, this._errFetching);
+        else if(this.props.area)
+            await ApiCalls.getAreaActionList(this.props.area.id,this._searchOK, this._userOut, this._errFetching);
+        else if (this.props.garden)
+            await ApiCalls.getAreaActionList(this.props.garden.id,this._searchOK, this._userOut, this._errFetching);
     }
 
-    static _userOut() {
-        alert("Connectez-vous pour continuer");
-        Actions.loginRoot();
+    _userOut() {
+        alert("Please connect to your account");
+        Actions.loginRoot({onFinish:this.getData});
     }
 
 
@@ -67,31 +60,39 @@ export default class ActionList extends Component {
 
     render() {
         if (this.state.isLoading)
-            return <View style={{alignItems: "center", justifyContent: "center"}}>
-                <Text style={{flex: 1}}>Loading ...</Text>
+            return <View style={{flex: 1, alignItems: "center", justifyContent: "center"}}>
+                <Text>Loading ...</Text>
             </View>;
 
         if (!this.state.dataSource || this.state.dataSource.length === 0) {
-            return <View style={{flex: 1, alignItems: "center", justifyContent: "center"}}><Text>Garden non
-                trouvé!</Text></View>
+            return <View style={{flex: 1, alignItems: "center", justifyContent: "center"}}><Text>No action found</Text>
+                <Ionicons onPress={() => {
+                    Actions.createActionScreen({onFinish: this.getData,plant:this.props.plant,area:this.props.area})
+                }}
+                          style={{position: "absolute", bottom: 40, right: 20}} size={50} name={"ios-add-circle"}/>
+            </View>
         }
         let ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-        return <SafeAreaView style={{flex:1}}>
+        return <SafeAreaView style={{flex: 1}}>
             <ListView
                 dataSource={ds.cloneWithRows(this.state.dataSource)}
-                renderRow={(garden) =>
-                    <TouchableOpacity onPress={() => Actions.actionDetailsScreen({garden})}
-                                      style={{height: 80, flex: 1, flexDirection: "row", justifyContent:"flex-start"}}>
-                        <View style={{flex:2,margin: 2, justifyContent: 'center'}}>
-                            <Text style={{fontWeight: "bold", fontSize: 17}}>{garden.name} {garden.type}</Text>
+                renderRow={(action) =>
+                    <TouchableOpacity onPress={() => Actions.oneActionScreen({data: action})}
+                                      style={{height: 80, flex: 1, flexDirection: "row", justifyContent: "flex-start"}}>
+                        <View style={{flex: 2, margin: 2, justifyContent: 'center'}}>
+                            <Text style={{fontWeight: "bold", fontSize: 17}}>{action.name} {action.type}</Text>
                         </View>
 
                     </TouchableOpacity>
                 }
-                renderSeparator={() => <View style={{backgroundColor: "green", height: 1, marginVertical: 1}}/>}
+                renderSeparator={() => <View style={{backgroundColor: "grey", height: 1, marginVertical: 1}}/>}
             />
-            <Ionicons onPress={()=>{Actions.newActionScreen({onFinish:this.getData})}}
-                      style={{position:"absolute", bottom:40,right:20}} size={50} name={"ios-add-circle"}/>
+            <Ionicons onPress={() => {
+                Actions.createActionScreen({onFinish: this.getData,plant:this.props.plant,area:this.props.area})
+            }}
+                      style={{position: "absolute", bottom: 40, right: 20}} size={50} name={"ios-add-circle"}/>
         </SafeAreaView>
     }
+
+
 }

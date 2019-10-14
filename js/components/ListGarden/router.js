@@ -21,7 +21,7 @@ export default class GardenRooter extends React.Component {
                     icon={this.tabIcon}
                     iconName={"home"}
                     tabBarLabel={"Home"}
-                    tabBarLabelStyle={{color: "green"}}
+                    tabBarLabelStyle={{color: "#00BB55"}}
                     hideNavBar={true}
                 >
                     <Modal
@@ -96,7 +96,7 @@ export default class GardenRooter extends React.Component {
     }
 
     tabIcon(props) {
-        return <Ionicons textStyle={{color: props.focused ? "green" : "grey"}} color={props.focused ? "green" : "grey"}
+        return <Ionicons textStyle={{color: props.focused ? "#00BB55" : "grey"}} color={props.focused ? "#00BB55" : "grey"}
                          size={30} name={"ios-" + props.iconName}/>;
     }
 }

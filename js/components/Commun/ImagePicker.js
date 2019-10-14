@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, Image, Text, View} from 'react-native';
+import {Button, Image, ScrollView, Text, View} from 'react-native';
 import { ImagePicker } from 'expo';
 
 export default class ImagePickerComponent extends React.Component {
@@ -24,15 +24,16 @@ export default class ImagePickerComponent extends React.Component {
                 </View>
 
                 {image &&
-                <Image source={{ uri: 'data:image/jpeg;base64,' +image }} style={{ width: 200, height: 200 }} />}
+                    <Image source={{ uri: 'data:image/jpeg;base64,' +image }} style={{ width: 200, height: 200 }} />}
             </View>
         );
     }
 
     async alertIfCameraPermissionDisabledAsync() {
         const {Permissions} = Expo;
-        const {status} = await Expo.Permissions.getAsync(Expo.Permissions.CAMERA);
-        if (status !== 'granted') {
+        let result1 = await Expo.Permissions.getAsync(Expo.Permissions.CAMERA);
+        let result2 = await Expo.Permissions.getAsync(Expo.Permissions.CAMERA_ROLL);
+        if (result1.status !== 'granted' && result2.status !== 'granted') {
             const {status} = await Expo.Permissions.askAsync(Expo.Permissions.CAMERA);
         }
     }

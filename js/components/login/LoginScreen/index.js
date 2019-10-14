@@ -31,6 +31,7 @@ export default class LoginScreen extends Component {
         this.handleUsername = this.handleUsername.bind(this);
         this.login = this.login.bind(this);
         this.handleStopSubmit = this.handleStopSubmit.bind(this);
+        this.loginSuccess = this.loginSuccess.bind(this);
     }
 
     /**
@@ -68,7 +69,7 @@ export default class LoginScreen extends Component {
         const pass = this.state.password;
 
         if (LoginScreen.checkInput(user, pass)) {
-            Api.authentificateUser(user, pass, this.state.abortSignal, LoginScreen.loginSuccess, LoginScreen.loginFailed, LoginScreen.connexionFailed).then(()=>doneLoading());
+            Api.authentificateUser(user, pass, this.state.abortSignal, this.loginSuccess, LoginScreen.loginFailed, LoginScreen.connexionFailed).then(()=>doneLoading());
         } else {
             alert("Please enter your login Username and Password");
             doneLoading();
@@ -89,11 +90,13 @@ export default class LoginScreen extends Component {
      * login api success callback function
      * @param res json of the api response {'accessToken':?}
      */
-    static loginSuccess(res) {
+    loginSuccess(res) {
         //login
         AsyncStorage.setItem("userToken",res.accessToken);
-        AsyncStorage.setItem("userId",res.userId);
+        AsyncStorage.setItem("userId",JSON.stringify(res.userId));
         Actions.reset("rootTab",{}) // TODO change it to home page
+        //this.props.onFinish(); // TODO change it to home page
+        //Actions.pop();// TODO change it to home page
     }
 
 
@@ -102,7 +105,7 @@ export default class LoginScreen extends Component {
      * @param error json of the api error
      */
     static connexionFailed(error) {
-        alert("Connexion failed" + JSON.stringify(error));
+        alert("Connexion failed");
     }
 
     /**
@@ -123,6 +126,7 @@ export default class LoginScreen extends Component {
                         <ButtonSubmit text={"LOGIN"} handleStopSubmit={this.handleStopSubmit}  handleSubmit={this.login}/>
 
                         <SignupSection
+                            onFinish={this.props.onFinish}
                             //signIngUrl={/*TODO*/} forgotPassordUrl={/*TODO*/}
                         />
                     </KeyboardAvoidingView>

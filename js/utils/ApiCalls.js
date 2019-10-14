@@ -7,7 +7,7 @@ import {AsyncStorage} from "react-native";
 export default class ApiCalls {
 
 
-    static authentificateUser (username, password, abortSignal, callback200, callback401,callbackOtherError) {
+    static authentificateUser(username, password, abortSignal, callback200, callback401, callbackOtherError) {
         return fetch(API_SERVER_URL + LOGIN_PATH, {
             method: 'post',
             headers: {
@@ -20,11 +20,11 @@ export default class ApiCalls {
             })
         }).then((res) => {
                 res.json().then(resJson => {
-                    if(res.status === 401){
+                    if (res.status === 401) {
                         callback401(resJson);
-                    }else if(res.status === 200){
+                    } else if (res.status === 200) {
                         callback200(resJson);
-                    }else{
+                    } else {
                         callbackOtherError(resJson);
                     }
                 });
@@ -35,12 +35,12 @@ export default class ApiCalls {
     }
 
 
-    static signup(username,password,email,
+    static signup(username, password, email,
                   callback200,
                   alreadyUsedMail,
                   alreadyUsedUsername,
                   callback400,
-                  callbackOtherError){
+                  callbackOtherError) {
         return fetch(API_SERVER_URL + SIGNUP_PATH, {
             method: 'post',
             headers: {
@@ -54,20 +54,20 @@ export default class ApiCalls {
             })
         }).then((res) => {
                 res.json().then(resJson => {
-                    if(res.status === 400){
-                        if(resJson.status === 1) {
+                    if (res.status === 400) {
+                        if (resJson.status === 1) {
                             //already used username
                             alreadyUsedMail();
-                        }else if(resJson.status === 2){
+                        } else if (resJson.status === 2) {
                             //already used mail
                             alreadyUsedUsername();
-                        }else {
+                        } else {
                             callback400(resJson);
                         }
-                    }else if(res.status === 200 || res.status === 201){
+                    } else if (res.status === 200 || res.status === 201) {
                         callback200(resJson);
 
-                    }else{
+                    } else {
                         callbackOtherError(resJson);
 
                     }
@@ -94,21 +94,18 @@ export default class ApiCalls {
                     else if (response.status === 200)
                         response.json().then(on200);
                     else {
-                        console.log(response);
                         onErr()
                     }
                 }).catch((error) => {
-                    console.log(error);
                     onErr();
                 });
     }
 
-     static async createGarden(data, on200, on401, onErr) {
+    static async createGarden(data, on200, on401, onErr) {
         let userId = await AsyncStorage.getItem("userId");
         let token = await AsyncStorage.getItem("userToken");
 
-        console.log(JSON.stringify({...data,userId}));
-         if (!token) on401();
+        if (!token) on401();
         else
             return fetch(API_SERVER_URL + '/api/gardens', {
                 method: "POST",
@@ -117,7 +114,7 @@ export default class ApiCalls {
                     Accept: 'application/json',
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({...data,userId:1}) //TODO change userId to var userId
+                body: JSON.stringify({...data, userId: 1}) //TODO change userId to var userId
             })
                 .then((response) => {
                     if (response.status === 401)
@@ -126,7 +123,6 @@ export default class ApiCalls {
                     else if (response.status === 201)
                         on200();
                     else {
-                        console.log(response);
                         onErr();
                     }
                 })
@@ -134,14 +130,14 @@ export default class ApiCalls {
                     console.log(error);
                     onErr();
                 });
-        
+
     }
 
     static async getAreaList(gardenId, on200, on401, onErr) {
         let token = await AsyncStorage.getItem("userToken");
         if (!token) on401();
         else
-            return fetch(API_SERVER_URL + '/api/gardens/'+gardenId+"/areas", {
+            return fetch(API_SERVER_URL + '/api/gardens/' + gardenId + "/areas", {
                 method: "GET",
                 headers: {
                     'Authorization': 'Bearer ' + token
@@ -153,7 +149,6 @@ export default class ApiCalls {
                     else if (response.status === 200)
                         response.json().then(on200);
                     else {
-                        console.log(response);
                         onErr()
                     }
                 }).catch((error) => {
@@ -166,14 +161,13 @@ export default class ApiCalls {
         let token = await AsyncStorage.getItem("userToken");
         if (!token) on401();
         else
-            return fetch(API_SERVER_URL + '/api/areas/'+areaId+'/plants', {
+            return fetch(API_SERVER_URL + '/api/areas/' + areaId + '/plants', {
                 method: "GET",
                 headers: {
                     'Authorization': 'Bearer ' + token
                 }
             })
                 .then((response) => {
-                    console.log(response);
                     if (response.status === 401)
                         on401();
                     else if (response.status === 200)
@@ -194,7 +188,7 @@ export default class ApiCalls {
 
         if (!token) on401();
         else
-            return fetch(API_SERVER_URL + '/api/gardens/'+gardenId+"/areas", {
+            return fetch(API_SERVER_URL + '/api/gardens/' + gardenId + "/areas", {
                 method: "POST",
                 headers: {
                     'Authorization': 'Bearer ' + token,
@@ -225,7 +219,7 @@ export default class ApiCalls {
 
         if (!token) on401();
         else
-            return fetch(API_SERVER_URL + '/api/areas/'+areaId+"/plants", {
+            return fetch(API_SERVER_URL + '/api/areas/' + areaId + "/plants", {
                 method: "POST",
                 headers: {
                     'Authorization': 'Bearer ' + token,
@@ -255,7 +249,7 @@ export default class ApiCalls {
         let token = await AsyncStorage.getItem("userToken");
         if (!token) on401();
         else
-            return fetch(API_SERVER_URL + '/api/gardens/user/'+userId, {
+            return fetch(API_SERVER_URL + '/api/gardens/user/' + userId, {
                 method: "GET",
                 headers: {
                     'Authorization': 'Bearer ' + token
@@ -271,6 +265,292 @@ export default class ApiCalls {
                         onErr()
                     }
                 }).catch((error) => {
+                    console.log(error);
+                    onErr();
+                });
+    }
+
+    static async getPlantActionList(id, on200, on401, onErr) {
+        let token = await AsyncStorage.getItem("userToken");
+        if (!token) on401();
+        else
+            return fetch(API_SERVER_URL + '/api/plants/' + id + '/actions', {
+                method: "GET",
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                }
+            })
+                .then((response) => {
+                    if (response.status === 401)
+                        on401();
+                    else if (response.status === 200)
+                        response.json().then(on200);
+                    else {
+                        console.log(response);
+                        onErr()
+                    }
+                }).catch((error) => {
+                    console.log(error);
+                    onErr();
+                });
+
+    }
+
+    static async getPlantObservationList(id, on200, on401, onErr) {
+        let token = await AsyncStorage.getItem("userToken");
+        if (!token) on401();
+        else
+            return fetch(API_SERVER_URL + '/api/plants/' + id + '/observations', {
+                method: "GET",
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                }
+            })
+                .then((response) => {
+                    if (response.status === 401)
+                        on401();
+                    else if (response.status === 200)
+                        response.json().then(on200);
+                    else {
+                        console.log(response);
+                        onErr()
+                    }
+                }).catch((error) => {
+                    console.log(error);
+                    onErr();
+                });
+
+    }
+
+    static async createPlantAction(id, data, on200, on401, onErr) {
+        let token = await AsyncStorage.getItem("userToken");
+
+        if (!token) on401();
+        else
+            return fetch(API_SERVER_URL + '/api/plants/' + id + "/statements", {
+                method: "POST",
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
+            })
+                .then((response) => {
+                    if (response.status === 401)
+                        on401();
+
+                    else if (response.status === 201 ||
+                        response.status === 200)
+                        on200();
+                    else {
+                        console.log(response);
+                        onErr();
+                    }
+                })
+                .catch((error) => {
+                    console.log(error);
+                    onErr();
+                });
+    }
+
+    static async createAreaAction(id, data, on200, on401, onErr) {
+        let token = await AsyncStorage.getItem("userToken");
+
+        if (!token) on401();
+        else
+            return fetch(API_SERVER_URL + '/api/area/' + id + "/statements", {
+                method: "POST",
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
+            })
+                .then((response) => {
+                    if (response.status === 401)
+                        on401();
+
+                    else if (response.status === 201 ||
+                        response.status === 200)
+                        on200();
+                    else {
+                        console.log(response);
+                        onErr();
+                    }
+                })
+                .catch((error) => {
+                    console.log(error);
+                    onErr();
+                });
+    }
+
+    static async getAreaActionList(id, on200, on401, onErr) {
+        let token = await AsyncStorage.getItem("userToken");
+        if (!token) on401();
+        else
+            return fetch(API_SERVER_URL + '/api/areas/' + id + '/actions', {
+                method: "GET",
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                }
+            })
+                .then((response) => {
+                    if (response.status === 401)
+                        on401();
+                    else if (response.status === 200)
+                        response.json().then(on200);
+                    else {
+                        console.log(response);
+                        onErr()
+                    }
+                }).catch((error) => {
+                    console.log(error);
+                    onErr();
+                });
+    }
+
+    static async getAreaObservationList(id, on200, on401, onErr) {
+        let token = await AsyncStorage.getItem("userToken");
+        if (!token) on401();
+        else
+            return fetch(API_SERVER_URL + '/api/areas/' + id + '/observations', {
+                method: "GET",
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                }
+            })
+                .then((response) => {
+                    if (response.status === 401)
+                        on401();
+                    else if (response.status === 200)
+                        response.json().then(on200);
+                    else {
+                        console.log(response);
+                        onErr()
+                    }
+                }).catch((error) => {
+                    console.log(error);
+                    onErr();
+                });
+    }
+
+    static async getProcessList(on200, on401, onErr) {
+        let token = await AsyncStorage.getItem("userToken");
+        if (!token) on401();
+        else
+            return fetch(API_SERVER_URL + '/api/protocols', {
+                method: "GET",
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                }
+            })
+                .then((response) => {
+                    if (response.status === 401)
+                        on401();
+                    else if (response.status === 200 || response)
+                        response.json().then(on200);
+                    else {
+                        onErr()
+                    }
+                }).catch((error) => {
+                    onErr();
+                });
+
+    }
+
+    static async createPlantObservation(id, data, on200, on401, onErr) {
+        let token = await AsyncStorage.getItem("userToken");
+
+        if (!token) on401();
+        else
+            return fetch(API_SERVER_URL + '/api/plants/' + id + "/statements", {
+                method: "POST",
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
+            })
+                .then((response) => {
+                    if (response.status === 401)
+                        on401();
+
+                    else if (response.status === 200 ||
+                        response.status === 200)
+                        on200();
+                    else {
+                        console.log(response);
+                        onErr();
+                    }
+                })
+                .catch((error) => {
+                    console.log(error);
+                    onErr();
+                });
+    }
+
+    static async createAreaObservation(id, data, on200, on401, onErr) {
+        let token = await AsyncStorage.getItem("userToken");
+
+        if (!token) on401();
+        else
+            return fetch(API_SERVER_URL + '/api/areas/' + id + "/statements", {
+                method: "POST",
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
+            })
+                .then((response) => {
+                    if (response.status === 401)
+                        on401();
+
+                    else if (response.status === 200 ||
+                        response.status === 200)
+                        on200();
+                    else {
+                        console.log(response);
+                        onErr();
+                    }
+                })
+                .catch((error) => {
+                    console.log(error);
+                    onErr();
+                });
+    }
+
+    static async createProcess(data, on200, on401, onErr) {
+        let token = await AsyncStorage.getItem("userToken");
+
+        if (!token) on401();
+        else
+            return fetch(API_SERVER_URL + '/api/protocols/', {
+                method: "POST",
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
+            })
+                .then((response) => {
+                    if (response.status === 401)
+                        on401();
+                    else if (response.status === 201 ||
+                        response.status === 200
+                    )
+                        on200();
+                    else {
+                        console.log(response);
+                        onErr();
+                    }
+                })
+                .catch((error) => {
                     console.log(error);
                     onErr();
                 });

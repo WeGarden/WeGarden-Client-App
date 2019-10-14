@@ -17,7 +17,7 @@ export default class SignupSection extends Component {
 
 
       //  setTimeout(() => {
-            Actions.signupScreen();
+            Actions.signupScreen({onFinish:this.props.onFinish});
         //    this.growAnimated.setValue(0);
        // }, 1000);
     }

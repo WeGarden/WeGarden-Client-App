@@ -18,6 +18,12 @@ import LoginScreen from "./js/components/login/LoginScreen";
 import SignupScreen from "./js/components/login/SignupScreen";
 import CreatePlantScreen from "./js/components/CreatePlant";
 import PlantLocationScreen from "./js/components/PlantLocation";
+import ActionList from "./js/components/Process/ActionsList";
+import NewAction from "./js/components/Process/NewAction";
+import NewProcess from "./js/components/Process/NewProcess";
+import ProcessForm from "./js/components/Process/ProcessForm";
+import ObservationList from "./js/components/Process/ObservationsList";
+import ActionDetails from "./js/components/Process/ActionDetails";
 
 export default class App extends Component {
 
@@ -40,7 +46,7 @@ export default class App extends Component {
                         icon={this.tabIcon}
                         iconName={"home"}
                         tabBarLabel={"Home"}
-                        tabBarLabelStyle={{color: "green"}}
+                        tabBarLabelStyle={{color: "#00BB55"}}
                         hideNavBar={true}
                         title={"Home"}
                     >
@@ -51,7 +57,10 @@ export default class App extends Component {
                                 title={"Gardens"}
                                 tabs={true} legacy={true} swipeEnabled={true}>
                                 <Scene key="gardensList"
+
                                        component={ListGarden}
+                                       icon={this.tabIcon}
+                                       iconName={"list"}
                                        title={"Gardens"}
                                        hideNavBar={true}
                                        initial
@@ -86,16 +95,24 @@ export default class App extends Component {
                                hideNavBar={false}
                         />
 
-                        <Scene key={"AreaScreen"} hideNavBar={false} navigationBarStyle={{backgroundColor: "#1c4c00"}}
+                        <Scene key={"AreaScreen"} hideNavBar={false} navigationBarStyle={{backgroundColor: "#00BB55"}}
                                titleStyle={{color: "white"}} component={OneZoneScreen}/>
                         <Scene key={"OnePlantScreen"} title={"Plant"} hideNavBar={false}
-                               navigationBarStyle={{backgroundColor: "green"}}
+                               navigationBarStyle={{backgroundColor: "#00BB55"}}
                                titleStyle={{color: "white"}} component={OnePlantScreen}/>
 
                         <Scene key={"CreateAreaScreen"} component={CreateAreaScreen}/>
                         <Scene key={"CreatePlantScreen"} component={CreatePlantScreen}/>
                         <Scene key={"createPlantScreen2"} component={PlantLocationScreen}/>
-                        <Scene key={"CreateObservationScreen"} component={NewObservation}/>
+                        <Scene key={"oneObservationScreen"} component={ActionDetails} hideNavBar={false}/>
+                        <Scene key={"oneActionScreen"} component={ActionDetails} hideNavBar={false}/>
+                        <Scene key={"CreateObservationScreen"} component={NewObservation} title={"New observation"} hideNavBar={false}/>
+                        <Scene key={"actionListScreen"} component={ActionList} hideNavBar={false}/>
+                        <Scene key={"observationListScreen"} component={ObservationList} hideNavBar={false}/>
+                        <Scene key={"createActionScreen"} component={NewAction} title={"New action"} hideNavBar={false}/>
+                        <Scene key={"createProtocolScreen"} component={NewProcess} title={"New protocol"} hideNavBar={false}/>
+                        <Scene key={"protocolFormScreen"} component={ProcessForm} title={"Protocol"} hideNavBar={false}/>
+
                     </Scene>
                 </Tabs>
 
@@ -121,7 +138,7 @@ export default class App extends Component {
     }
 
     tabIcon(props) {
-        return <Ionicons textStyle={{color: props.focused ? "green" : "grey"}} color={props.focused ? "green" : "grey"}
+        return <Ionicons textStyle={{color: props.focused ? "#00BB55" : "grey"}} color={props.focused ? "#00BB55" : "grey"}
                          size={30} name={"ios-" + props.iconName}/>;
     }
 }

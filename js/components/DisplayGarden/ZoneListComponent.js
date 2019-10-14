@@ -1,10 +1,10 @@
 import {Component,} from "react";
-import {TouchableOpacity, StyleSheet, View, Text, ListView, FlatList} from "react-native";
-import PlantComponent from "./PlantComponent";
+import {TouchableOpacity, StyleSheet, View, Text, ListView, FlatList, Image} from "react-native";
 import React from "react";
 import {Actions} from "react-native-router-flux";
 import OnePlantComponent from "../OneZoneScreen/OnePlantComponent";
 import ApiCalls from "../../utils/ApiCalls";
+import Ionicons from "@expo/vector-icons/Ionicons";
 
 const zones = [
     {key: '1', name: "zone1"},
@@ -26,6 +26,7 @@ export class ZoneListComponent extends Component {
         this._searchOK = this._searchOK.bind(this);
         this._errFetching = this._errFetching.bind(this);
         this._rowRender = this._rowRender.bind(this);
+        this._addPlantRender = this._addPlantRender.bind(this);
 
     }
 
@@ -43,12 +44,12 @@ export class ZoneListComponent extends Component {
     }
 
     async getData() {
-        await ApiCalls.getPlantList(this.props.data.id,this._searchOK,this._userOut,this._errFetching);
+        await ApiCalls.getPlantList(this.props.data.id, this._searchOK, this._userOut, this._errFetching);
     }
 
     _userOut() {
         alert("Please connect to your account");
-        Actions.loginRoot({type:"reset"});
+        Actions.loginRoot({type: "reset"});
     }
 
 
@@ -60,48 +61,68 @@ export class ZoneListComponent extends Component {
     }
 
     render() {
-        if (this.state.isLoading) {
-            return (
-                <View style={{flex: 1, justifyContent: "center", alignItems: "center"}}>
-                    <View style={{backgroundColor: "#495A80", borderRadius: 5, padding: 20}}>
-                        <Text style={{color: 'white', textAlign: 'center'}}>Loading ...</Text>
-                    </View>
-                </View>
-            );
-        } else {
 
-            return (
-                <View style={styles.container}>
+        return (
+            <View style={styles.container}>
+                <TouchableOpacity onPress={() => Actions.AreaScreen({area: this.props.data})}
+                                  style={{flexDirection: "row",}}>
                     <View style={styles.titleContainer}>
-                        <Text style={{fontSize: 20, color: "white"}}>{this.props.data.name}</Text>
-                        <TouchableOpacity onPress={()=>Actions.AreaScreen({area:this.props.data})}>
-                            <Text style={{fontSize: 18, color: "white"}}>Details</Text>
-                        </TouchableOpacity>
+                        <Text style={{fontSize: 20, fontWeight: "bold"}}>{this.props.data.name}</Text>
+                        <Text style={{fontSize: 18, color: "#00BB55"}}>Details</Text>
+
                     </View>
-                    {!(this.state.data != null && this.state.data.length !== 0)?
-                        <View style={{flex:1,justifyContent:"center", alignItems: "center"}}>
-                            <TouchableOpacity onPress={()=>Actions.CreatePlantScreen({area:this.props.data})} style={{backgroundColor: "#406442",}}>
-                                <Text style={{color:"white"}}>Add a plant</Text>
-                            </TouchableOpacity>
-                        </View> :
-                    <FlatList
+                    <View style={{padding: 10, justifyContent: "center", alignItems: "center"}}>
+                        <Ionicons name={"ios-arrow-forward"} size={40}/>
+                    </View>
+                </TouchableOpacity>
+
+                {this.state.isLoading ?
+                    <View style={{flex: 1, justifyContent: "center", alignItems: "center"}}>
+                        <View style={{backgroundColor: "#495A80", borderRadius: 5, padding: 20}}>
+                            <Text style={{color: 'white', textAlign: 'center'}}>Loading ...</Text>
+                        </View>
+                    </View>
+                    : <FlatList
                         horizontal={true}
                         data={this.state.data}
+                        ListHeaderComponent={this._addPlantRender}
                         renderItem={this._rowRender}
-                        style={{backgroundColor: "#f2f2f2"}}
-
+                        style={{backgroundColor: "#ffffff"}}
+                        keyExtractor={item => JSON.stringify(item.id)}
+                        showsHorizontalScrollIndicator={false}
                     />
-                    }
-                </View>
-            );
-        }
+                }
+            </View>
+        );
+
+    }
+
+    _addPlantRender() {
+        return <View style={{
+            shadowOffset: {
+                width: 0,
+                height: 3,
+            },
+            shadowColor: "black",
+            shadowOpacity: 0.5,
+            elevation: 2,
+        }}><TouchableOpacity onPress={() => Actions.CreatePlantScreen({area: this.props.data})}
+                             style={styles.addButtonCard}>
+            <View style={{flex: 4, justifyContent: "center"}}><Ionicons style={{}} name={'ios-add-circle'} size={100}
+                                                                        color={"#00BB55"}/></View>
+            <View style={{flex: 1, backgroundColor: "#ffffff", padding: 5}}>
+                <Text style={{flex: 1, justifyContent: "center", fontWeight: "bold"}}>Add a plant</Text>
+
+            </View>
+        </TouchableOpacity>
+        </View>
     }
 
     _rowRender(rowData) {
         return <OnePlantComponent
             data={rowData.item}
             area={this.props.data}
-            style={{margin:10,}}
+            style={{margin: 10,}}
         />;
     }
 }
@@ -109,15 +130,34 @@ export class ZoneListComponent extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        //backgroundColor: "#2f862f",
-        marginVertical: 5,
+        backgroundColor: "white",
         // borderWidth: 1,
-        // borderColor: "#1b4a19",
+        //borderColor: "#1b4a19",
+
         height: 300,
         justifyContent: 'center',
+        marginBottom: 20,
+        shadowOffset: {
+            width: 0,
+            height: 0,
+        },
+        shadowColor: "black",
+        shadowOpacity: 0.3,
+        elevation: 2,
     },
     titleContainer: {
+        flex: 1,
         padding: 10,
-        backgroundColor: "#406442",
-    }
+//        backgroundColor: "#406442",
+    },
+    addButtonCard: {
+        width: 170,
+        margin: 10,
+        height: 200,
+        borderRadius: 10,
+        backgroundColor: "white",
+        alignItems: 'center',
+        justifyContent: 'center',
+        overflow: "hidden"
+    },
 });

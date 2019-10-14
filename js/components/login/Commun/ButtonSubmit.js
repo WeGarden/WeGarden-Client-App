@@ -15,7 +15,7 @@ import {Actions, ActionConst} from 'react-native-router-flux';
 
 import spinner from '../../../../assets/images/loading.gif';
 
-const BUTTONCOLOR = 'green';
+const BUTTONCOLOR = "#00BB55";
 const BORDER_COLOR = 'rgba(32, 157, 18, 1)';
 const ANIMATION_COLOR = 'rgba(32, 157, 18, 0.8)';
 const DEVICE_WIDTH = Dimensions.get('window').width;

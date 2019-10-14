@@ -27,6 +27,7 @@ export default class SignupScreen extends Component {
         this.handleUsername = this.handleUsername.bind(this);
         this.handleEmail = this.handleEmail.bind(this);
         this.signupAction = this.signupAction.bind(this);
+        this.signinSuccess = this.signinSuccess.bind(this);
 
     }
 
@@ -83,7 +84,7 @@ export default class SignupScreen extends Component {
                 user,
                 pass,
                 email,
-                SignupScreen.signinSuccess,
+                this.signinSuccess,
                 SignupScreen.alreadyExistsMail,
                 SignupScreen.alreadyExistsUsername,
                 SignupScreen.connexionFailed,
@@ -131,12 +132,14 @@ export default class SignupScreen extends Component {
      * sign in api success callback function
      * @param res json of the api response {'accessToken':?}
      */
-    static signinSuccess(res) {
+    signinSuccess(res) {
         //login
         alert(res.accessToken);
         AsyncStorage.setItem("userToken", res.accessToken);
         AsyncStorage.setItem("userId", res.userId);
         Actions.reset("rootTab",{}) // TODO change it to home page
+
+        this.props.onFinish()
     }
 
 

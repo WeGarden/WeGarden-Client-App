@@ -41,6 +41,7 @@ export default class CreateGarden extends Component {
         };
         this.handlePress = this.handlePress.bind(this);
         this.onFinish = this.onFinish.bind(this);
+        this.on401 = this.on401.bind(this);
     }
 
     onCancelPress() {
@@ -60,7 +61,6 @@ export default class CreateGarden extends Component {
     };
 
     handlePress() {
-        console.log(JSON.stringify(this.state));
         this.onActivityCreated();
     }
 
@@ -74,7 +74,7 @@ export default class CreateGarden extends Component {
             onFinish: this.onFinish,
             description: this.state.description,
             gardenType:this.state.gardenType,
-            gardenName:this.state.gardenName,
+            actObsName:this.state.actObsName,
             isPrivate:this.state.private,
             location: this.state.location
         });
@@ -126,7 +126,7 @@ export default class CreateGarden extends Component {
                         autoCapitalize={'words'}
                         returnKeyType={'done'}
                         autoCorrect={false}
-                        handler={(gardenName) => this.setState({gardenName})}
+                        handler={(gardenName) => this.setState({gardenName: actObsName})}
                         value={this.props.title}
                     />
                 </View>
@@ -201,7 +201,7 @@ const styles = StyleSheet.create({
         textAlign: 'center'
     },
     bouton: {
-        backgroundColor: "green",
+        backgroundColor: "#00BB55",
         flex: 0.5,
         justifyContent: "center",
         paddingHorizontal: 50,

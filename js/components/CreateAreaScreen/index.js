@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+    Platform,
     Dimensions,
     Alert,
     SafeAreaView,
@@ -99,7 +100,7 @@ export default class CreateAreaScreen extends React.Component {
                     <TouchableOpacity style={{
                         flex: 1,
                         alignItems: "center",
-                        backgroundColor: "green",
+                        backgroundColor: "#00BB55",
                         justifyContent: "center",
                     }}
                                       onPress={() => this.setState({isDrawing: false})}>
@@ -151,7 +152,7 @@ export default class CreateAreaScreen extends React.Component {
                     flex: 2,
                     width: Dimensions.get("screen").width,
                     alignItems: "center",
-                    backgroundColor: this._isFilled() ? "green" : "grey",
+                    backgroundColor: this._isFilled() ? "#00BB55" : "grey",
                     height: 50,
                     justifyContent: "center",
                 }}
@@ -163,7 +164,7 @@ export default class CreateAreaScreen extends React.Component {
     }
 
     onAreaCreated() {
-        alert("Garden created!");
+        alert("Area created!");
         Actions.pop({refresh:{garden:this.props.garden}});
         //this.props.onFinish();
     }

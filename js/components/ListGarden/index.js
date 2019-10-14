@@ -29,6 +29,7 @@ export default class ListGarden extends Component {
         this._errFetching = this._errFetching.bind(this);
         this._searchOK = this._searchOK.bind(this);
         this.getData = this.getData.bind(this);
+        this._userOut = this._userOut.bind(this);
 
     }
 
@@ -53,7 +54,7 @@ export default class ListGarden extends Component {
 
     _userOut() {
         alert("Please connect to your account");
-        Actions.loginRoot();
+        Actions.loginRoot({onFinish:this.getData});
     }
 
 
@@ -93,7 +94,7 @@ export default class ListGarden extends Component {
 
                     </TouchableOpacity>
                 }
-                renderSeparator={() => <View style={{backgroundColor: "green", height: 1, marginVertical: 1}}/>}
+                renderSeparator={() => <View style={{backgroundColor: "#00BB55", height: 1, marginVertical: 1}}/>}
             />
             <Ionicons onPress={() => {
                 Actions.createGardenScreen({onFinish: this.getData})

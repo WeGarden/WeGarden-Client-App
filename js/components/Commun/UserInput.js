@@ -43,7 +43,7 @@ export default class UserInput extends Component {
                     autoCorrect={this.props.autoCorrect}
                     autoCapitalize={this.props.autoCapitalize}
                     returnKeyType={this.props.returnKeyType}
-                    placeholderTextColor="green"
+                    placeholderTextColor="#00BB55"
                     underlineColorAndroid='transparent'
                     onChangeText={this.props.handler}
                     value={this.props.value}
@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
         marginHorizontal: 20,
         paddingLeft: 45,
         borderWidth:1,
-        borderColor: "green",
+        borderColor: "#00BB55",
         borderRadius: 20,
         color: 'black',
     },

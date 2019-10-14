@@ -11,15 +11,20 @@ export default class OnePlantComponent extends React.Component {
 
 
     render() {
-        console.log(this.props.data);
-        return <View {...this.props} style={{...styles.component}}>
-            <TouchableOpacity onPress={()=>Actions.OnePlantScreen({area:this.props.area,plant:this.props.data})} style={{flex:1}}>
+        return <View style={{shadowOffset:{
+                width:0,
+                height:3,
+            },
+            elevation: 1,
+            shadowColor: "black",
+            shadowOpacity:0.5,}}><TouchableOpacity onPress={()=>Actions.OnePlantScreen({area:this.props.area,plant:this.props.data})} style={styles.component}>
                 <Image
-                    style={{width: 150, height: 150}}
+                    resizeMode={"cover"}
+                    style={{width: 170, height: 170}}
                     source={{uri: 'data:image/jpeg;base64,' + this.props.data.image}}
                 />
                 <View style={{flex: 1, backgroundColor: "#ffffff", padding: 5}}>
-                    <Text style={{flex: 1, justifyContent: "center"}}>{this.props.data.name || "Plant X"}</Text>
+                    <Text style={{flex: 1, justifyContent: "center", fontWeight: "bold"}}>{this.props.data.name || "Plant X"}</Text>
 
                 </View>
             </TouchableOpacity>
@@ -29,10 +34,14 @@ export default class OnePlantComponent extends React.Component {
 
 const styles = StyleSheet.create({
     component: {
-       // width: 170,
+        width: 170,
+        margin:10,
         height: 200,
-        alignItems: 'center',
+        borderRadius:10,
+        backgroundColor:"white",
+        //alignItems: 'center',
         justifyContent: 'center',
+        overflow: "hidden"
     },
 
 

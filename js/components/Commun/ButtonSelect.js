@@ -10,18 +10,18 @@ export default class ButtonSelect extends Component {
                                  style={StyleSheet.flatten([
                                      this.styles.buttonSelect,
                                      {
-                                         backgroundColor: this.props.checked ? "green" : "white",
+                                         backgroundColor: this.props.checked ? "#00BB55" : "white",
                                      }])}>
             <Text style={{
                 textAlign: "center",
                 flex: 1,
                 fontSize: 20,
-                color: this.props.checked ? "white" : "green"
+                color: this.props.checked ? "white" : "#00BB55"
             }}>{this.props.text}</Text>
             <View style={{flex: 1, alignItems: "center"}}>
                 <Ionicons name={this.props.checked ? "ios-checkbox-outline" : "ios-square-outline"}
                           size={35}
-                          color={this.props.checked ? "white" : "green"}/>
+                          color={this.props.checked ? "white" : "#00BB55"}/>
             </View>
         </TouchableOpacity>
     }
@@ -31,7 +31,7 @@ export default class ButtonSelect extends Component {
             {
                 height: 40,
                 width: 200,
-                borderColor: "green",
+                borderColor: "#00BB55",
                 borderWidth: 1,
                 borderRadius: 20,
                 flexDirection: "row",

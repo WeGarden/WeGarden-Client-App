@@ -9,7 +9,7 @@ export default class RouterS extends Component {
     render() {
         return <Router>
             <Scene key={"root"} modal={true} hideNavBar={true}>
-                <Scene key={"AreaScreen"} hideNavBar={false} navigationBarStyle={{backgroundColor: "#1c4c00"}}
+                <Scene key={"AreaScreen"} hideNavBar={false} navigationBarStyle={{backgroundColor: "#00BB55"}}
                        titleStyle={{color: "white"}} component={OneZoneScreen} initial/>
                 <Scene key={"CreateAreaScreen"} component={CreateAreaScreen}/>
 

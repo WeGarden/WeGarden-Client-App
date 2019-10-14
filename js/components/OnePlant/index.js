@@ -4,11 +4,10 @@ import {
     Animated,
     SafeAreaView,
     ListView,
-    FlatList,
     StyleSheet,
     Text,
     View,
-    Image, ScrollView
+    Image, ScrollView, Dimensions
 } from 'react-native';
 import {Actions, Scene} from "react-native-router-flux";
 import {Ionicons} from '@expo/vector-icons';
@@ -26,8 +25,6 @@ export default class OnePlantScreen extends React.Component {
     constructor(props) {
         super();
         this.state = this.getInitialState();
-
-        this._getRenderRow = this._getRenderRow.bind(this);
         this._onMapLoad = this._onMapLoad.bind(this);
 
     }
@@ -47,36 +44,35 @@ export default class OnePlantScreen extends React.Component {
 
     }
 
-    _onMapLoad(){
+    _onMapLoad() {
         let coordinates = this.props.area.coordList;
-        this.refs.map.fitToCoordinates(coordinates) //{coordinates:this.props.path});
+        this.state.map.fitToCoordinates(coordinates) //{coordinates:this.props.path});
     }
 
     render() {
-        console.log(this.props.plant.coord);
         return (
             <View style={styles.container}>
-                <View style={styles.header}>
-                    <MapView style={styles.bar}
-                             showsMyLocationButton={false}
-                             showsPointsOfInterest={false}
-                             showsTraffic={false}
-                             zoomEnabled={false}
-                             zoomControlEnabled={false}
-                             scrollEnabled={false}
-                             rotateEnabled={false}
-                             toolbarEnabled={false}
-                             loadingEnabled={true}
-                             moveOnMarkerPress={false}
-                             ref={"map"}
-                             provider={"google"}
-                             mapPadding={{
-                                 top: 10,
-                                 right: 10,
-                                 bottom: 10,
-                                 left: 10
-                             }}
-                             onLayout={this._onMapLoad}
+                <View style={{
+                    position: "absolute",
+                    width: Dimensions.get("screen").width,
+                    top: 0,
+                    flex: 1,
+                    height: Dimensions.get("screen").height
+                }}>
+                    <MapView
+                        ref={(ref) => {
+                            this.state.map = ref
+                        }}
+                        provider={"google"}
+                        style={{flex: 1}}
+                        mapPadding={{
+                            top: 10,
+                            right: 10,
+                            bottom: 450,
+                            left: 10
+                        }}
+                        onLayout={this._onMapLoad}
+                        mapType={this.state.isSatellite ? "satellite" : "standard"}
                     >
                         <MapView.Polygon
                             fillColor={"rgba(0,0,200,0.3)"}
@@ -88,37 +84,64 @@ export default class OnePlantScreen extends React.Component {
                         />
 
 
-
                     </MapView>
-                    <View style={{flexDirection: "row", justifyContent: "space-evenly"}}>
-                        <TouchableOpacity onPress={() => Actions.CreateObservationScreen()}
-                                          style={{flex: 1, alignItems: "center", justifyContent: "center", height: 50}}>
-                            <Text style={{color: "green"}}>Observations</Text></TouchableOpacity>
-                        <TouchableOpacity style={{flex: 1, alignItems: "center", justifyContent: "center", height: 50}}><Text
-                            style={{color: "green"}}>Actions</Text></TouchableOpacity>
-                    </View>
                 </View>
-                <ScrollView style={{flex:1}}>
-                    <View>
-                        <View style={{flexDirection:"row", padding:10}}>
-                            <Text style={{flex:1,fontWeight:"bold"}}>Name:</Text>
-                            <Text style={{flex:1}}>{this.props.plant.name}</Text>
-                        </View>
-                        <View style={{flexDirection:"row", padding:10}}>
-                            <Text style={{flex:1,fontWeight:"bold"}}>Species:</Text>
-                            <Text style={{flex:1}}>{this.props.plant.species}</Text>
-                        </View>
-                        <View style={{flexDirection:"row", padding:10}}>
-                            <Text style={{flex:1,fontWeight:"bold"}}>Family:</Text>
-                            <Text style={{flex:1}}>{this.props.plant.family}</Text>
+                <ScrollView style={{flex: 1}}>
+                    <View style={{height: 300}}>
+                        <View style={{
+                            position: "absolute",
+                            bottom: 0,
+                            flexDirection: "row",
+                            justifyContent: "space-evenly"
+                        }}>
+                            <View style={{
+                                flex: 1,
+                                alignItems: "center",
+                                justifyContent: "center",
+                                height: 60
+                            }}>
+                                <TouchableOpacity style={styles.button}
+                                                  onPress={() => Actions.observationListScreen({plant: this.props.plant})}
+                                >
+                                    <Text>Observations</Text>
+                                </TouchableOpacity>
+                            </View>
+                            <View style={{
+                                flex: 1,
+                                alignItems: "center",
+                                justifyContent: "center",
+                                height: 60
+                            }}>
+                                <TouchableOpacity style={styles.button}
+                                                  onPress={() => Actions.actionListScreen({plant: this.props.plant})}
+                                >
+                                    <Text>Actions</Text>
+                                </TouchableOpacity>
+                            </View>
                         </View>
                     </View>
-                <View>
-                    <Text style={{fontWeight: "bold", fontSize: 18, margin:10}}>Photo:</Text>
-                </View>
-                    <View style={{alignItems:"center"}}>
-                    <Image style={{width: 300,height:300}} resizeMode={"cover"}
-                       source={{uri: 'data:image/jpeg;base64,' + this.props.plant.image}}/>
+                    <View style={styles.addButtonCard}>
+                        <View style={{flexDirection: "row", padding: 10}}>
+                            <Text style={{flex: 1, fontWeight: "bold"}}>Name:</Text>
+                            <Text style={{flex: 1}}>{this.props.plant.name}</Text>
+                        </View>
+                        <View style={{flexDirection: "row", padding: 10}}>
+                            <Text style={{flex: 1, fontWeight: "bold"}}>Species:</Text>
+                            <Text style={{flex: 1}}>{this.props.plant.species}</Text>
+                        </View>
+                        <View style={{flexDirection: "row", padding: 10}}>
+                            <Text style={{flex: 1, fontWeight: "bold"}}>Family:</Text>
+                            <Text style={{flex: 1}}>{this.props.plant.family}</Text>
+                        </View>
+                    </View>
+                    <View style={styles.addButtonCard}>
+                        <View>
+                            <Text style={{fontWeight: "bold", fontSize: 18, margin: 10}}>Photo:</Text>
+                        </View>
+                        <View style={{alignItems: "center"}}>
+                            <Image style={{width: 300, height: 300}} resizeMode={"cover"}
+                                   source={{uri: 'data:image/jpeg;base64,' + this.props.plant.image}}/>
+                        </View>
                     </View>
                 </ScrollView>
 
@@ -126,30 +149,13 @@ export default class OnePlantScreen extends React.Component {
         );
 
     }
-
-    _getRenderRow(rowData) {
-        return <View {...this.props} style={{...styles.component}}>
-            <View style={{flex: 1}}>
-                <Image
-                    style={{width: 150, height: 150}}
-                    source={{uri: 'https://3c1703fe8d.site.internapcdn.net/newman/gfx/news/hires/2016/howpartsofap.jpg'}}
-                />
-                <View style={{flex: 1, backgroundColor: "#ffffff", padding: 5}}>
-                    <Text style={{flex: 1, justifyContent: "center"}}>{this.props.title || "Plant X"}</Text>
-
-                </View>
-            </View>
-        </View>
-    }
 }
 
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fffef6',
         //alignItems: 'center',
-        justifyContent: 'flex-start',
     },
     list: {
         flexDirection: 'row',
@@ -184,13 +190,41 @@ const styles = StyleSheet.create({
         marginTop: HEADER_MAX_HEIGHT,
     },
 
-    component: {
+    addButtonCard: {
         // width: 170,
+        backgroundColor: "white",
         margin: 10,
-        height: 200,
+        padding: 10,
         alignItems: 'center',
         justifyContent: 'center',
+
+        shadowOffset: {
+            width: 0,
+            height: 3,
+        },
+        shadowColor: "black",
+        shadowOpacity: 0.5,
+        borderRadius: 20,
+
+        elevation: 2,
     },
 
+    button: {
+        flex: 1,
+        alignItems: "center",
+        justifyContent: "center",
+        height: 30,
+        width: '85%',
+        backgroundColor: "white",
+        borderRadius: 10,
+        shadowColor: '#000000',
+        shadowOffset: {
+            width: 0,
+            height: 1
+        },
+        shadowOpacity: 0.5,
+
+        elevation: 2
+    },
 
 });

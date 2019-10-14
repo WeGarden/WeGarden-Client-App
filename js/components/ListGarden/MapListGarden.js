@@ -30,6 +30,7 @@ export default class ListGarden extends Component {
         this._errFetching = this._errFetching.bind(this);
         this._searchOK = this._searchOK.bind(this);
         this.getData = this.getData.bind(this);
+        this._userOut = this._userOut.bind(this);
 
     }
 
@@ -52,9 +53,9 @@ export default class ListGarden extends Component {
             await ApiCalls.getGardenList(this._searchOK, this._userOut, this._errFetching);
     }
 
-    static _userOut() {
+    _userOut() {
         alert("Connectez-vous pour continuer");
-        Actions.loginRoot();
+        Actions.loginRoot({onFinish:this.getData});
     }
 
 
@@ -67,20 +68,20 @@ export default class ListGarden extends Component {
     }
 
     render() {
+        let alert;
         if (this.state.isLoading)
-            return <View style={{alignItems: "center", justifyContent: "center"}}>
+            alert = <View style={{alignItems: "center", justifyContent: "center"}}>
                 <Text style={{flex: 1}}>Loading ...</Text>
             </View>;
         else if (this.state.error)
-            return <View style={{alignItems: "center", justifyContent: "center"}}>
+            alert = <View style={{alignItems: "center", justifyContent: "center"}}>
                 <Text style={{flex: 1}}>Loading Error!</Text>
             </View>
         else if (!this.state.dataSource || this.state.dataSource.length === 0) {
-            return <View style={{flex: 1, alignItems: "center", justifyContent: "center"}}><Text>Garden non
-                trouvé!</Text></View>
+             alert = <View style={{flex: 1, alignItems: "center", justifyContent: "center"}}><Text>No garden found</Text></View>
         }
-        let ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
         return <SafeAreaView style={{flex: 1}}>
+
             <MapView
                 ref={"map"}
                 provider={"google"}
@@ -91,7 +92,7 @@ export default class ListGarden extends Component {
                     bottom: 10,
                     left: 10
                 }}
-                onLayout={this._onMapLoad}
+                //onLayout={this._onMapLoad}
                 mapType={this.state.isSatellite ? "satellite" : "standard"}
             >
                 {this.state.dataSource != null ? this.state.dataSource.map((garden, index) => <MapView.Polygon

@@ -9,7 +9,7 @@ export default class Logo extends Component {
   render() {
       return (
       <View style={styles.globalContainer}>
-        <View style={{alignItems: "center", padding:10, borderWidth:3, borderColor:"green", borderRadius:30, backgroundColor: "white"}}>
+        <View style={{alignItems: "center", padding:10, borderWidth:3, borderColor:"#00BB55", borderRadius:30, backgroundColor: "white"}}>
         <Image source={logoImg} style={styles.image} />
         <Text style={styles.text}>{APP_TITLE}</Text>
         </View>
@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize:50,
-    color: 'green',
+    color: "#00BB55",
     fontWeight: 'bold',
     marginTop: 10,
       padding: 10,

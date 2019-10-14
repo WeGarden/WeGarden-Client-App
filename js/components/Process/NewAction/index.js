@@ -18,7 +18,7 @@ import {Ionicons} from "@expo/vector-icons";
 
 
 
-export default class NewObservation extends React.Component {
+export default class NewAction extends React.Component {
 
     constructor(props) {
         super(props);
@@ -33,21 +33,19 @@ export default class NewObservation extends React.Component {
         this._submit = this._submit.bind(this);
         this.getData = this.getData.bind(this);
         this.renderProtocols = this.renderProtocols.bind(this);
-        this.onObservationCreated = this.onObservationCreated.bind(this);
+        this.onActionCreated = this.onActionCreated.bind(this);
     }
     _submit(protocol,values){
         let data ={
             name: this.state.actObsName,
             protocolId: protocol.id,
-            statementType: "observation",
+            statementType: "action",
             values:values
         };
-
-        console.log("data: " + data);
         if(this.props.plant)
-            ApiCalls.createPlantObservation(this.props.plant.id,data,this.onObservationCreated,this.on401,this.onErr)
+            ApiCalls.createPlantAction(this.props.plant.id,data,this.onActionCreated,this.on401,this.onErr)
         else
-            ApiCalls.createAreaObservation(this.props.area.id,data,this.onObservationCreated,this.on401,this.onErr)
+            ApiCalls.createAreaAction(this.props.area.id,data,this.onActionCreated,this.on401,this.onErr)
 
     }
 
@@ -72,7 +70,7 @@ export default class NewObservation extends React.Component {
     }
 
     _isFilled() {
-        return !this.state.isDrawing && this.state.actObsName && this.state.actObsName.length > 3;
+        return this.state.actObsName && this.state.actObsName.length > 3;
     }
 
 
@@ -88,7 +86,7 @@ export default class NewObservation extends React.Component {
                 }}>Name:</Text>
                 <TextInput
                     style={{height: 50, fontSize: 20}}
-                    placeholder={"Observation name (required)"}
+                    placeholder={"Action name (required)"}
                     onChangeText={this.setActObsName}
                     showsScale={true}
                     value={this.state.actObsName}
@@ -123,7 +121,7 @@ export default class NewObservation extends React.Component {
             data={this.state.protocols}
             renderItem={(item) => <TouchableOpacity
                 style={{flex: 1, height: 50, flexDirection: "row", alignItems: "center"}}
-                onPress={() => this.state.actObsName.length>3?Actions.protocolFormScreen({
+                onPress={() => this._isFilled()?Actions.protocolFormScreen({
                     name: this.state.actObsName,
                     onFinish: this._submit,
                     protocol: item.item,
@@ -148,9 +146,9 @@ export default class NewObservation extends React.Component {
         alert("Erreur");
     }
 
-    onObservationCreated() {
+    onActionCreated() {
         this.props.onFinish();
-        Actions.pop()
+        Actions.pop();
         Actions.pop()
     }
 }

@@ -48,7 +48,6 @@ export default class GardenLocation2 extends Component {
     };
 
     handlePress() {
-        console.log(JSON.stringify(this.state));
         let data = {
             coordList: this.state.coordList,
             description: this.props.description,
@@ -126,8 +125,8 @@ export default class GardenLocation2 extends Component {
                     </View>
 
                     <View style={{flex: 1}}>
-                        <Text style={{fontWeight: "bold", color: "green"}}>Garden plan</Text>
-                        <Text style={{color: "green"}}>Please picture or pick from your device the plan of your
+                        <Text style={{fontWeight: "bold", color: "#00BB55"}}>Garden plan</Text>
+                        <Text style={{color: "#00BB55"}}>Please picture or pick from your device the plan of your
                             garden:</Text>
                     </View>
 
@@ -168,7 +167,7 @@ const styles = StyleSheet.create({
         textAlign: 'center'
     },
     bouton: {
-        backgroundColor: "green",
+        backgroundColor: "#00BB55",
         flex: 0.5,
         justifyContent: "center",
         paddingHorizontal: 50,
